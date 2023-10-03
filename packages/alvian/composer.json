@@ -1,0 +1,16 @@
+{
+    "name": "alvian/custom-migrate",
+    "description": "description",
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "AlViAn",
+            "email": "vr_kz@bk.ru",
+            "homepage": "https://github.com/AlViAn94"
+        }
+    ],
+    "require": {
+        "php": "^7.3|^8.0"
+    }
+}
