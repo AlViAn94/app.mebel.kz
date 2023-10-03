@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services\Auth;
+namespace App\Services\v1\Auth;
 
-use App\Models\User;
-use \Illuminate\Http\JsonResponse;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Models\v1\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthService
 {

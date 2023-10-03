@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\v1\Auth;
 
-use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-use App\Services\Auth\RegistAdminService;
-use App\Http\Requests\Auth\RgistAdminRequest;
+use App\Http\Requests\v1\Auth\RgistAdminRequest;
+use App\Services\v1\Auth\RegistAdminService;
+use Illuminate\Http\JsonResponse;
 
 class RegistUserController extends Controller
 {
