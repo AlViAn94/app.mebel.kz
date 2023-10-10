@@ -61,3 +61,8 @@ Route::middleware('auth:api')->group(function (){
             });
     });
 });
+
+// test
+Route::get('/test', [\App\Console\Commands\Custom\CustomMigrationService::class, 'actionCustomMigration']);
+Route::get('/test-mass', [\App\Console\Commands\Custom\CustomMigrationService::class, 'actionMassMigration']);
+// test end
