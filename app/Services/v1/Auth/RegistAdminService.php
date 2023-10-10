@@ -26,7 +26,7 @@ class RegistAdminService
 
             return response()->json(['message' => 'User registered successfully']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Registration failed'], 500);
+            return response()->json(['error' => $e], 500);
         }
 
     }
