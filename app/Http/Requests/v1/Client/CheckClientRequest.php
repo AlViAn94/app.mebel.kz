@@ -24,8 +24,8 @@ class CheckClientRequest extends FormRequest
     public function rules()
     {
         return [
-            'iin' => 'numeric|digits:12',
-            'phone' => 'numeric'
+            'iin' => 'nullable|numeric|digits:12',
+            'phone' => 'nullable|numeric'
         ];
     }
 }

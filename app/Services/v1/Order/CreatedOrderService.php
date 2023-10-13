@@ -9,7 +9,6 @@ class CreatedOrderService
 {
     public function createOrder($request)
     {
-
         DB::transaction(function () use ($request) {
             $client_id = $request['client_id'];
             $address = $request['address'];
@@ -32,7 +31,8 @@ class CreatedOrderService
                 'comment' => $comment,
             ]);
             // Создаём шаблоны для заказа
-           return $order->createdAllPosition();
+           $order->createdAllPosition();
         });
+        return response()->json(['message' => 'Заказ успешно создан!']);
     }
 }

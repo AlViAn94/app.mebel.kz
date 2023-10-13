@@ -15,7 +15,7 @@ class CreatedClientController extends Controller
 
         if(empty($result['message']))
         {
-            $text = 'добавил нового клиента!';
+            $text = 'добавил нового клиента: ' . $result['name'] . ' ' . $result['surname'];
             UserActionLog::createdLog($text);
             return $result;
         }

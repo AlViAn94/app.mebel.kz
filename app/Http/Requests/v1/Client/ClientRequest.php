@@ -26,10 +26,10 @@ class ClientRequest extends FormRequest
         return [
             'iin' => 'required|numeric|digits:12',
             'name' => 'required|string',
-            'surname' => 'string',
-            'lastname' => 'string',
+            'surname' => 'nullable|string',
+            'lastname' => 'nullable|string',
             'phone' => 'required|integer',
-            'email' => 'required|email',
+            'email' => 'nullable|required|email',
         ];
     }
 }

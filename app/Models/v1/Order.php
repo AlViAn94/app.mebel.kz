@@ -182,9 +182,9 @@ class Order extends Model
                 'sum' => $data['sum']
             ]);
 
-            return "Заказ успешно обновлен.";
+            return response()->json(["message" => "Заказ успешно обновлен!"]);
         } else {
-            return "Заказ не найден.";
+            return response()->json(["message" => "Заказ не найден!"]);
         }
     }
 }

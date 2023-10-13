@@ -4,6 +4,7 @@ namespace App\Services\v1\Auth;
 
 use App\Models\v1\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -27,10 +28,24 @@ class AuthService
                 return response()->json(['error' => 'Could not create token'], 500);
             }
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Could not create token'], 500);
+            return response()->json(['error' => $e], 500);
         }
 
-        return response()->json(compact('token'));
+        $data = DB::table('user_role')->where('user_id', $user['id'])->get();
+        $role = [];
+        $i = 0;
+
+        foreach ($data as $v) {
+            $role[$i]['to'] = '/' . $v->role;
+            $role[$i]['title'] = $v->name;
+            $i++;
+        }
+
+        return response()->json([
+            'token' => $token,
+            'name' => $user['name'],
+            'role' => $role
+            ]);
     }
 
     public function refreshToken(): JsonResponse
@@ -39,7 +54,7 @@ class AuthService
             $newToken = JWTAuth::parseToken()->refresh();
             return response()->json(['access_token' => $newToken]);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Could not refresh token'], 401);
+            return response()->json(['error' => $e], 401);
         }
     }
 

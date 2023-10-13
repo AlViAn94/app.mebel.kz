@@ -60,11 +60,10 @@ class CustomMigrationService
     static function makeMigrate($table)
     {
         $columns = Schema::getColumnListing($table);
-        // Получаем информацию о внешних ключах таблицы (если они есть)
-        $tableF = Schema::getConnection()->getDoctrineSchemaManager()->listTableDetails($table);
-
-        $foreignKeys = $tableF->getForeignKeys();
-        print_r($foreignKeys['_localColumnNames:protected']); exit();
+//        // Получаем информацию о внешних ключах таблицы (если они есть)
+//        $tableF = Schema::getConnection()->getDoctrineSchemaManager()->listTableDetails($table);
+//
+//        $foreignKeys = $tableF->getForeignKeys();
 
         $tableName = 'generate:migration-file ' . $table .' --table=' . $table . ' --columns=';
         foreach($columns as $v){

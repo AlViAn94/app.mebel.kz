@@ -7,6 +7,7 @@ use App\Http\Requests\v1\Auth\AuthRequest;
 use App\Services\v1\Auth\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -40,6 +41,20 @@ class AuthController extends Controller
     }
     public function actionCheckUser()
     {
-        return Auth::user();
+        $user = Auth::user();
+        $data = DB::table('user_role')
+            ->where('user_id', $user['id'])
+            ->get();
+
+        $role = [];
+        $i = 0;
+
+        foreach ($data as $v) {
+            $role[$i] = $v->role;
+            $i++;
+        }
+        $user['role'] = $role;
+
+        return $user;
     }
 }

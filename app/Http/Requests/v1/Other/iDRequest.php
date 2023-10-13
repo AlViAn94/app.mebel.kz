@@ -4,6 +4,7 @@ namespace App\Http\Requests\v1\Other;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class iDRequest extends FormRequest
 {
@@ -14,7 +15,11 @@ class iDRequest extends FormRequest
      */
     public function authorize()
     {
-        if(Auth::user()->position() == 'manager'){
+        $user_id = Auth::user()->id;
+
+        $result = DB::table('user_role')->where('user_id', $user_id)->where('role', 'manager')->count();
+
+        if($result == true){
             return true;
         }else{
             return false;

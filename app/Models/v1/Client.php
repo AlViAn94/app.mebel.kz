@@ -35,7 +35,7 @@ class Client extends Model
         }else{
             return [
                 'message' => 'Данный клиент уже зарегистрирован!',
-                'iin' => $data['iin']
+                'client_id' => $existingRecord['id']
             ];
         }
     }
@@ -49,7 +49,7 @@ class Client extends Model
         {
             return $existingRecord;
         }else{
-            return false;
+            return response()->json(['error' => 'not found'], 404);
         }
     }
 }
