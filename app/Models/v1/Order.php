@@ -162,9 +162,13 @@ class Order extends Model
             ->orderBy('status', 'asc')
             ->orderBy($sort, $asc ? 'asc' : 'desc')
             ->paginate($pageSize, ['*'], 'page', $page);
-
+        $i = 0;
         foreach ($orders as $order) {
+            $client = Client::where('id', $orders[$i]['client_id'])->select('name', 'surname', 'lastname')->first();
+            $full_name = $client['surname'] . ' ' . $client['name'] . ' ' . $client['lastname'];
             $order->order_number = $firstItemNumber++;
+            $order->full_name = $full_name;
+            $i++;
         }
         return $orders;
     }

@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\v1\Auth\AuthController;
+use App\Http\Controllers\v1\Client\ClientController;
 use App\Http\Controllers\v1\Order\OrderController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\v1\Client\ClientController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,7 +56,7 @@ Route::middleware('auth:api')->group(function (){
                 Route::get('/order-type', 'actionOrderType');
                 Route::post('/confirm-order', 'actionConfirmOrder');
                 Route::post('/processing-order', 'actionProcessing');
-                Route::get('/order-sort', 'actionOrderSort');
+                Route::post('/order-sort', 'actionOrderSort');
                 Route::post('/order-update', 'actionUpdate');
             });
     });
