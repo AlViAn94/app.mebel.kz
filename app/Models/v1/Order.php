@@ -21,6 +21,7 @@ class Order extends Model
         'sum',
         'type',
         'comment',
+        'date_end'
     ];
 
     public static function findById($id)
@@ -32,45 +33,13 @@ class Order extends Model
     {
         return $this->hasOne(Design::class, 'order_id');
     }
-
     public function metring()
     {
         return $this->hasOne(Metring::class, 'order_id');
     }
-
     public function tehnologist()
     {
         return $this->hasOne(Technologist::class, 'order_id');
-    }
-
-    public function sawing()
-    {
-        return $this->hasOne(Sawing::class, 'order_id');
-    }
-
-    public function painting()
-    {
-        return $this->hasOne(Painting::class, 'order_id');
-    }
-
-    public function sunset()
-    {
-        return $this->hasOne(Sunset::class, 'order_id');
-    }
-
-    public function vacuum()
-    {
-        return $this->hasOne(Vacuum::class, 'order_id');
-    }
-
-    public function collector()
-    {
-        return $this->hasOne(Collector::class, 'order_id');
-    }
-
-    public function frezer()
-    {
-        return $this->hasOne(Frezer::class, 'order_id');
     }
 
     public function createdAllPosition()
@@ -78,51 +47,21 @@ class Order extends Model
         $this->hasOne(Design::class, 'order_id')->create();
         $this->hasOne(Metring::class, 'order_id')->create();
         $this->hasOne(Technologist::class, 'order_id')->create();
-        $this->hasOne(Sawing::class, 'order_id')->create();
-        $this->hasOne(Painting::class, 'order_id')->create();
-        $this->hasOne(Sunset::class, 'order_id')->create();
-        $this->hasOne(Vacuum::class, 'order_id')->create();
-        $this->hasOne(Collector::class, 'order_id')->create();
-        $this->hasOne(Frezer::class, 'order_id')->create();
     }
 
-    public function getAllPosition()
+    public function getAllPosition($id)
     {
-        $designs = Design::where('order_id', $this->id)->get();
-        $metrings = Metring::where('order_id', $this->id)->get();
-        $technologists = Technologist::where('order_id', $this->id)->get();
-        $sawings = Sawing::where('order_id', $this->id)->get();
-        $paintings = Painting::where('order_id', $this->id)->get();
-        $sunsets = Sunset::where('order_id', $this->id)->get();
-        $vacuums = Vacuum::where('order_id', $this->id)->get();
-        $collectors = Collector::where('order_id', $this->id)->get();
-        $frezers = Frezer::where('order_id', $this->id)->get();
+        $orders = Order::where('id', $id)->with(['design', 'metring', 'tehnologist'])
+            ->get();
 
-        // Вернуть все полученные позиции
-        return [
-            'designs' => $designs,
-            'metrings' => $metrings,
-            'technologists' => $technologists,
-            'sawings' => $sawings,
-            'paintings' => $paintings,
-            'sunsets' => $sunsets,
-            'vacuums' => $vacuums,
-            'collectors' => $collectors,
-            'frezers' => $frezers,
-        ];
+        return $orders;
     }
 
     public function deletedAllPosition()
     {
-        $this->hasOne(Design::class, 'order_id')->delete();
-        $this->hasOne(Metring::class, 'order_id')->delete();
-        $this->hasOne(Technologist::class, 'order_id')->delete();
-        $this->hasOne(Sawing::class, 'order_id')->delete();
-        $this->hasOne(Painting::class, 'order_id')->delete();
-        $this->hasOne(Sunset::class, 'order_id')->delete();
-        $this->hasOne(Vacuum::class, 'order_id')->delete();
-        $this->hasOne(Collector::class, 'order_id')->delete();
-        $this->hasOne(Frezer::class, 'order_id')->delete();
+            $this->hasOne(Design::class, 'order_id')->delete();
+            $this->hasOne(Metring::class, 'order_id')->delete();
+            $this->hasOne(Technologist::class, 'order_id')->delete();
     }
 
     public static function getLastNum()
@@ -132,54 +71,12 @@ class Order extends Model
             ->first();
     }
 
-    static function getSortOrder($data)
-    {
-        $search = $data['search'];
-        $status = $data['status'];
-        $page = $data['page'];
-        $sort = $data['sort'];
-        $asc = $data['asc'];
-        $pageSize = $data['count'];
-
-        if(!$page){
-            $page = 1;
-        }
-
-        if (empty($sort)) {
-            $sort = 'updated_at';
-        }
-        $firstItemNumber = ($page - 1) * $pageSize + 1;
-
-        $orders = self::where(function ($query) use ($search, $status, $sort, $asc) {
-            $query
-                ->where('status', $status)
-                ->where(function ($query) use ($search) {
-                    $query
-                        ->where('order_num', 'LIKE', "%{$search}%")
-                        ->orWhere('address', 'LIKE', "%{$search}%");
-                });
-        })
-            ->orderBy('status', 'asc')
-            ->orderBy($sort, $asc ? 'asc' : 'desc')
-            ->paginate($pageSize, ['*'], 'page', $page);
-        $i = 0;
-        foreach ($orders as $order) {
-            $client = Client::where('id', $orders[$i]['client_id'])->select('name', 'surname', 'lastname')->first();
-            $full_name = $client['surname'] . ' ' . $client['name'] . ' ' . $client['lastname'];
-            $order->order_number = $firstItemNumber++;
-            $order->full_name = $full_name;
-            $i++;
-        }
-        return $orders;
-    }
-
     public static function updateOrder($data)
     {
         $order = Order::find($data['id']);
 
         if ($order) {
             $order->update([
-                'client_id' => $data['client_id'],
                 'address' => $data['address'],
                 'date_end' => $data['date_end'],
                 'type' => $data['type'],

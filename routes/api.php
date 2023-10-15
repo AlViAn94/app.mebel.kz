@@ -31,36 +31,37 @@ Route::middleware('auth:api')->group(function (){
                 Route::get('/check-user', 'actionCheckUser');
             });
 
-        Route::controller(\App\Http\Controllers\v1\Client\CreatedClientController::class)
-            ->group(function (){
-                Route::post('/created-client', 'actionCreatedClient');
-            });
-
         Route::post('/reg-personal', [\App\Http\Controllers\v1\Auth\RegistUserController::class, 'actionRegistPersonal']);
 
-        Route::post('/new-order', [\App\Http\Controllers\v1\Order\CreatedOrderController::class, 'actionCreatedOrder']);
+        // Clients
+        Route::prefix('clients')->group(function () {
 
-        Route::post('/deleted-order', [\App\Http\Controllers\v1\Order\DeletedOrderController::class, 'actionDeletedOrder']);
+        });
+        Route::resource('clients', '\App\Http\Controllers\v1\Client\ClientController')->only(['create', 'show', 'update']);
 
-        Route::post('/test', [\App\Http\Controllers\v1\Order\CreatedOrderController::class, 'actionCreated']);
+        // Orders
+        Route::prefix('orders')->group(function () {
+            Route::get('type', [\App\Http\Controllers\v1\Order\OrderTypeController::class, 'actionOrderType']);
+            Route::post('index', [\App\Http\Controllers\v1\Order\OrderController::class, 'index']);
+            Route::get('positions', [\App\Http\Controllers\v1\Order\GetFullPositionController::class, 'actionGetFullPosition']);
+        });
+        Route::resource('orders', '\App\Http\Controllers\v1\Order\OrderController')->only(['create', 'show', 'update', 'destroy']);
 
-        Route::post('/full-position', [\App\Http\Controllers\v1\Order\GetFullPositionController::class, 'actionGetFullPosition']);
+        // Office jobs
 
-        Route::controller(ClientController::class)
-            ->group(function (){
-                Route::get('/check-client', 'actionCheckClient');
-            });
+        Route::resource('office/metring', '\App\Http\Controllers\v1\Order\Job\MetringController')->only(['create', 'show', 'update', 'destroy']);
+        Route::resource('office/design', '\App\Http\Controllers\v1\Order\Job\DesignController')->only(['create', 'show', 'update', 'destroy']);
 
-        Route::controller(OrderController::class)
-            ->group(function (){
-                Route::get('/order-type', 'actionOrderType');
-                Route::post('/confirm-order', 'actionConfirmOrder');
-                Route::post('/processing-order', 'actionProcessing');
-                Route::post('/order-sort', 'actionOrderSort');
-                Route::post('/order-update', 'actionUpdate');
-            });
+        Route::prefix('office/job')->group(function () {
+        });
+
     });
 });
+
+
+
+
+
 
 // test
 Route::get('/test', [\App\Console\Commands\Custom\CustomMigrationService::class, 'actionCustomMigration']);

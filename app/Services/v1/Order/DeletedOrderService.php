@@ -7,24 +7,24 @@ use Illuminate\Support\Facades\DB;
 
 class DeletedOrderService
 {
-    public function deletedOrder($request)
+    public function deletedOrder($id)
     {
-        DB::transaction(function () use ($request) {
-            $id = $request['id'];
+        return DB::transaction(function () use ($id) {
             $order = Order::findById($id);
-            if($order->status < 2){
-                if ($order) {
+            if ($order) {
+                if ($order->status < 2) {
                     // Удаляем шаблоны для заказа
                     $order->deletedAllPosition();
                     // Удалить запись
                     $order->delete();
                     return response()->json(['message' => 'Запись успешно удалена']);
                 } else {
-                    return response()->json(['error' => 'Запись не найдена'], 404);
+                    return response()->json(['message' => 'Невозможно удалить заказ!']);
                 }
-            }else{
-                return response()->json(['message' => 'Невозможно удалить заказ!']);
+            } else {
+                return response()->json(['error' => 'Запись не найдена'], 404);
             }
         });
     }
+
 }

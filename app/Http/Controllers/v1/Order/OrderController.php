@@ -2,43 +2,53 @@
 
 namespace App\Http\Controllers\v1\Order;
 
-use App\Http\Controllers\Controller;
+use App\Services\v1\Order\CreatedOrderService;
+use App\Services\v1\Order\DeletedOrderService;
 use App\Http\Requests\v1\Other\iDRequest;
-use App\Models\v1\Order;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Services\v1\Order\SortOrderService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use App\Models\v1\Client;
+use App\Models\v1\Order;
 
 class OrderController extends Controller
 {
-    public function actionOrderType()
+    public function index(Request $request, SortOrderService $service)
     {
-        return DB::table('orders_type')->select('id', 'name')->get();
+        return $service->getOrdersService($request->all());
     }
 
-    public function actionProcessing(IdRequest $request)
+    public function create(Request $request, CreatedOrderService $service)
     {
-        $id = $request['id'];
-        $status = 1;
-        return Order::where('id', $id)->update(['status' => $status]);
+        return $service->createOrder($request->all());
     }
 
-    public function actionConfirmOrder(IdRequest $request)
+    public function show(Request $request)
     {
-        $id = $request['id'];
-        $status = 2;
-        return Order::where('id', $id)->update(['status' => $status]);
+        $id = $request->id;
+        $result = [];
+        $order = Order::where('id', $id)->first();
+        $client = Client::where('id', $order['client_id'])->first();
+        $result['order'] = $order;
+        $result['client'] = $client;
+        return $result;
+
     }
 
-    public function actionOrderSort(Request $request)
-    {
-        return Order::getSortOrder($request->all());
-    }
-
-    public function actionUpdate(Request $request)
+    public function update(Request $request)
     {
         return Order::updateOrder($request->all());
     }
 
+    public function destroy(iDRequest $request, DeletedOrderService $service)
+    {
+        return $service->deletedOrder($request->id);
+    }
+
+
+
+    // tests for mds project
     public function actionTest()
     {
         // Выполните SQL-запрос и получите результаты

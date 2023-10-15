@@ -52,4 +52,23 @@ class Client extends Model
             return response()->json(['error' => 'not found'], 404);
         }
     }
+    public static function updateClient($data)
+    {
+        $order = self::find($data['id']);
+
+        if ($order) {
+            $order->update([
+                'iin' => $data['iin'],
+                'email' => $data['email'],
+                'name' => $data['name'],
+                'surname' => $data['surname'],
+                'lastname' => $data['lastname'],
+                'phone' => $data['phone']
+            ]);
+
+            return response()->json(["message" => "Клиент успешно обновлен!"]);
+        } else {
+            return response()->json(["message" => "Клиент не найден!"]);
+        }
+    }
 }
