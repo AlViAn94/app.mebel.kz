@@ -13,6 +13,7 @@ class GetFullPositionService
             $order = Order::findById($id);
                 if ($order) {
                     $result = $order->getAllPosition($id);
+
                     return $result;
                 } else {
                     return response()->json(['error' => 'Запись не найдена'], 404);

@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\v1\Auth\AuthController;
-use App\Http\Controllers\v1\Client\ClientController;
 use App\Http\Controllers\v1\Order\OrderController;
 use Illuminate\Support\Facades\Route;
 
@@ -48,9 +47,9 @@ Route::middleware('auth:api')->group(function (){
         Route::resource('orders', '\App\Http\Controllers\v1\Order\OrderController')->only(['create', 'show', 'update', 'destroy']);
 
         // Office jobs
-
         Route::resource('office/metring', '\App\Http\Controllers\v1\Order\Job\MetringController')->only(['create', 'show', 'update', 'destroy']);
         Route::resource('office/design', '\App\Http\Controllers\v1\Order\Job\DesignController')->only(['create', 'show', 'update', 'destroy']);
+        Route::resource('office/technologist', '\App\Http\Controllers\v1\Order\Job\TechnologistController')->only(['create', 'show', 'update', 'destroy']);
 
         Route::prefix('office/job')->group(function () {
         });

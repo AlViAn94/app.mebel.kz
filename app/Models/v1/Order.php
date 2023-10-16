@@ -53,6 +53,13 @@ class Order extends Model
     {
         $orders = Order::where('id', $id)->with(['design', 'metring', 'tehnologist'])
             ->get();
+        $job = Job::where('order_id', $id)->get();
+
+        foreach ($job as $item) {
+            $position = $item->position;
+            $job1 = Job::where('order_id', $id)->where('position', $position)->get();
+            $orders[0][$position] = $job1;
+        }
 
         return $orders;
     }
