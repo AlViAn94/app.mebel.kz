@@ -51,7 +51,7 @@ class Order extends Model
 
     public function getAllPosition($id)
     {
-        $orders = Order::where('id', $id)->with(['design', 'metring', 'tehnologist'])
+        $orders = Order::where('id', $id)->with(['design', 'metrings', 'tehnologist'])
             ->get();
         $job = Job::where('order_id', $id)->get();
 

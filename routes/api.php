@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
 // Для версии 1.0 API
 Route::prefix('v1')->group(function () {
     Route::post('/login', [AuthController::class, 'actionLoginUser']);
@@ -47,18 +48,18 @@ Route::middleware('auth:api')->group(function (){
         Route::resource('orders', '\App\Http\Controllers\v1\Order\OrderController')->only(['create', 'show', 'update', 'destroy']);
 
         // Office jobs
-        Route::resource('office/metring', '\App\Http\Controllers\v1\Order\Job\MetringController')->only(['create', 'show', 'update', 'destroy']);
+        Route::resource('office/metrings', '\App\Http\Controllers\v1\Order\Job\MetringController')->only(['create', 'show', 'update', 'destroy']);
         Route::resource('office/design', '\App\Http\Controllers\v1\Order\Job\DesignController')->only(['create', 'show', 'update', 'destroy']);
         Route::resource('office/technologist', '\App\Http\Controllers\v1\Order\Job\TechnologistController')->only(['create', 'show', 'update', 'destroy']);
 
-        Route::prefix('office/job')->group(function () {
+        Route::prefix('file')->group(function () {
+            Route::post('add', [\App\Http\Controllers\v1\File\MetringFileController::class, 'create']);
         });
 
     });
+    // Files controller
+
 });
-
-
-
 
 
 

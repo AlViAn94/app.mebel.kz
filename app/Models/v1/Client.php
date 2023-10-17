@@ -33,10 +33,9 @@ class Client extends Model
             $newRecord->save();
             return $newRecord;
         }else{
-            return [
-                'message' => 'Данный клиент уже зарегистрирован!',
-                'client_id' => $existingRecord['id']
-            ];
+            return response()->json([
+                'message' => 'Данный клиент уже зарегистрирован!'
+            ], 404);
         }
     }
 
@@ -49,7 +48,7 @@ class Client extends Model
         {
             return $existingRecord;
         }else{
-            return response()->json(['error' => 'not found'], 404);
+            return response()->json(['message' => "Клиент не найден!"], 404);
         }
     }
     public static function updateClient($data)
@@ -68,7 +67,7 @@ class Client extends Model
 
             return response()->json(["message" => "Клиент успешно обновлен!"]);
         } else {
-            return response()->json(["message" => "Клиент не найден!"]);
+            return response()->json(["message" => "Клиент не найден!"], 404);
         }
     }
 }

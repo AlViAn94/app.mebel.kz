@@ -18,7 +18,7 @@ class ClientController extends Controller
     {
         $result = Client::newClient($request->all());
 
-        if(empty($result['message']))
+        if(empty($result))
         {
             $text = 'добавил нового клиента: ' . $result['name'] . ' ' . $result['surname'];
             UserActionLog::createdLog($text);
