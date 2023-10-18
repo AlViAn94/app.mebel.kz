@@ -8,22 +8,18 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create("sawing", function (Blueprint $table) {
+        Schema::create("jobs", function (Blueprint $table) {
             $table->bigIncrements("id");
             $table->bigInteger("order_id");
             $table->integer("user_id");
+            $table->string("position", 256);
             $table->integer("status");
             $table->timestamps();
-
-            $table->foreign('order_id')
-                ->references('id')
-                ->on('orders')
-                ->onDelete('cascade');
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists("sawing");
+        Schema::dropIfExists("jobs");
     }
 };

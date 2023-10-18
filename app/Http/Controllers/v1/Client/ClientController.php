@@ -10,10 +10,7 @@ use App\Models\v1\UserActionLog;
 use Illuminate\Http\Request;
 class ClientController extends Controller
 {
-    public function actionCheckClient(CheckClientRequest $request)
-    {
-        return Client::checkClient($request);
-    }
+
     public function create(ClientRequest $request)
     {
         $result = Client::newClient($request->all());
