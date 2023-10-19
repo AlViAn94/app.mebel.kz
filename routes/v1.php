@@ -4,11 +4,12 @@ use App\Http\Controllers\v1\Auth\AuthController;
 use App\Http\Controllers\v1\Order\OrderController;
 use Illuminate\Support\Facades\Route;
 
-// Для версии 1.0 API
+// version 1.0 API
     Route::post('/login', [AuthController::class, 'actionLoginUser']);
 
 Route::middleware('auth:api')->group(function (){
 
+        // user interface
         Route::controller(AuthController::class)
             ->group(function (){
                 Route::get('/refresh-token', 'actionRefreshToken');
@@ -35,7 +36,7 @@ Route::middleware('auth:api')->group(function (){
 
         // Office jobs
         Route::prefix('office')->group(function () {
-            Route::resource('metrings', '\App\Http\Controllers\v1\Order\Job\MetringController')->only(['create', 'show', 'update', 'destroy']);
+            Route::resource('metring', '\App\Http\Controllers\v1\Order\Job\MetringController')->only(['create', 'show', 'update', 'destroy']);
             Route::resource('design', '\App\Http\Controllers\v1\Order\Job\DesignController')->only(['create', 'show', 'update', 'destroy']);
             Route::resource('technologist', '\App\Http\Controllers\v1\Order\Job\TechnologistController')->only(['create', 'show', 'update', 'destroy']);
         });

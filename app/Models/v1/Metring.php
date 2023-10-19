@@ -25,6 +25,9 @@ class Metring extends Model
             'user_id' => $id,
             'status' => 1
         ]);
+        Order::where('id', $order_id)->update([
+            'design' => 1
+        ]);
         if ($result) {
             return response()->json(['message' => 'Заказ успешно взят']);
         } else {

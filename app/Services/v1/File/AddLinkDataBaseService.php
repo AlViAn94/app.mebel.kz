@@ -2,7 +2,7 @@
 
 namespace App\Services\v1\File;
 
-use Illuminate\Http\Request;
+use App\Models\v1\Order;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -20,6 +20,9 @@ class AddLinkDataBaseService
             $model = DB::table($db)->where('order_id', $id)->update([
                 'file' => $zipLink,
                 'status' => 2
+            ]);
+            Order::where('id', $id)->update([
+                $db => 2
             ]);
             if(!$model){
                 return response()->json(['message' => 'Не удалось сохранить файл!'], 404);
