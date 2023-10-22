@@ -4,10 +4,11 @@ namespace App\Models\v1;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
 class Order extends Model
 {
-    use HasFactory;
+    use HasFactory, UsesTenantConnection;
 
     /**
      * The attributes that are mass assignable.
@@ -51,17 +52,21 @@ class Order extends Model
 
     public function getAllPosition($id)
     {
-        $orders = Order::where('id', $id)->with(['design', 'metring', 'tehnologist'])
-            ->get();
+        $design = Design::where('order_id', $id)->first();
+        $metring = Metring::where('order_id', $id)->first();
+        $tehnologist = Technologist::where('order_id', $id)->first();
+
+        $position['design'][0] = $design;
+        $position['tehnologist'][0] = $tehnologist;
+        $position['metring'][0] = $metring;
+
         $job = Job::where('order_id', $id)->get();
-
-        foreach ($job as $item) {
-            $position = $item->position;
-            $job1 = Job::where('order_id', $id)->where('position', $position)->get();
-            $orders[0][$position] = $job1;
+        foreach ($job as $v) {
+            $id_job = $v->id;
+            $job1 = Job::where('id', $id_job)->first();
+            $position[$job1['position']][$id_job] = $job1;
         }
-
-        return $orders;
+        return $position;
     }
 
     public function deletedAllPosition()

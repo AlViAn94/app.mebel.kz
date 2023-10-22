@@ -15,6 +15,8 @@ class SortOrderService
         $sort = $data['sort'];
         $asc = $data['asc'];
         $pageSize = $data['count'];
+        $position = $data['position'];
+        $position_status = $data['position_status'];
 
         if(!$page){
             $page = 1;
@@ -25,9 +27,10 @@ class SortOrderService
         }
         $firstItemNumber = ($page - 1) * $pageSize + 1;
 
-        $orders = Order::where(function ($query) use ($search, $status, $sort, $asc) {
+        $orders = Order::where(function ($query) use ($search, $status, $sort, $asc, $position_status, $position) {
             $query
                 ->where('status', $status)
+                ->where($position, $position_status)
                 ->where(function ($query) use ($search) {
                     $query
                         ->where('order_num', 'LIKE', "%{$search}%")

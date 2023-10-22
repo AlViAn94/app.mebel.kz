@@ -22,8 +22,14 @@ class AddLinkDataBaseService
                 'status' => 2
             ]);
             Order::where('id', $id)->update([
-                $db => 2
+                $db => 2,
+                'status' => 1
             ]);
+            if($db == 'technologists'){
+                Order::where('id', $id)->update([
+                    'status' => 2
+                ]);
+            }
             if(!$model){
                 return response()->json(['message' => 'Не удалось сохранить файл!'], 404);
             }

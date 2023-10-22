@@ -5,7 +5,12 @@ use App\Http\Controllers\v1\Order\OrderController;
 use Illuminate\Support\Facades\Route;
 
 // version 1.0 API
-    Route::post('/login', [AuthController::class, 'actionLoginUser']);
+Route::post('/login', [AuthController::class, 'actionLoginUser']);
+
+// Company
+Route::prefix('company')->group(function () {
+    Route::resource('tenant', '\App\Http\Controllers\v1\Company\CompanyController');
+});
 
 Route::middleware('auth:api')->group(function (){
 
@@ -58,7 +63,14 @@ Route::middleware('auth:api')->group(function (){
             Route::resource('card', '\App\Http\Controllers\v1\Order\Job\Factory\FactoryCardController');
             // create new positions for the factory
             Route::resource('position', '\App\Http\Controllers\v1\Order\Job\Factory\FactoryTypeController');
+            Route::resource('take/card', '\App\Http\Controllers\v1\Order\Job\Factory\FactoryTakeCardController');
+
+
         });
+
+
+
+
 
 });// middleware auth:api
 

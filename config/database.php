@@ -91,6 +91,26 @@ return [
             'prefix_indexes' => true,
         ],
 
+        'tenant' => [
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('COMPANY_DB_HOST', '127.0.0.1'),
+            'port' => env('COMPANY_DB_PORT', '3306'),
+            'database' => null,
+            'username' => env('COMPANY_DB_USERNAME', 'forge'),
+            'password' => env('COMPANYL_DB_PASSWORD', ''),
+            'unix_socket' => env('SCHOOL_DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
     ],
 
     /*
