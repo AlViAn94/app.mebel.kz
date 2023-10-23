@@ -7,12 +7,7 @@ use Illuminate\Support\Facades\Route;
 // version 1.0 API
 Route::post('/login', [AuthController::class, 'actionLoginUser']);
 
-// Company
-Route::prefix('company')->group(function () {
-    Route::resource('tenant', '\App\Http\Controllers\v1\Company\CompanyController');
-});
-
-Route::middleware('auth:api')->group(function (){
+Route::middleware('auth:api','tenant')->group(function (){
 
         // user interface
         Route::controller(AuthController::class)
@@ -33,7 +28,8 @@ Route::middleware('auth:api')->group(function (){
         // Orders
         Route::prefix('orders')->group(function () {
             Route::get('type', [\App\Http\Controllers\v1\Order\OrderTypeController::class, 'actionOrderType']);
-            Route::post('index', [\App\Http\Controllers\v1\Order\OrderController::class, 'index']);
+            Route::post('list', [\App\Http\Controllers\v1\Order\OrderController::class, 'list']);
+            Route::post('list/position', [\App\Http\Controllers\v1\Order\OrderController::class, 'listPosition']);
             Route::get('positions', [\App\Http\Controllers\v1\Order\GetFullPositionController::class, 'actionGetFullPosition']);
         });
 
@@ -68,11 +64,7 @@ Route::middleware('auth:api')->group(function (){
 
         });
 
-
-
-
-
-});// middleware auth:api
+});// middleware auth:api, tenant
 
 
 

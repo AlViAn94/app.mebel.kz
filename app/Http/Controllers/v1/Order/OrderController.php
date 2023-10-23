@@ -14,9 +14,14 @@ use App\Models\v1\Order;
 
 class OrderController extends Controller
 {
-    public function index(Request $request, SortOrderService $service)
+    public function list(Request $request)
     {
-        return $service->getOrdersService($request->all());
+        return Order::list($request->all());
+    }
+
+    public function listPosition(Request $request)
+    {
+        return Order::listPosition($request->all());
     }
 
     public function create(Request $request, CreatedOrderService $service)

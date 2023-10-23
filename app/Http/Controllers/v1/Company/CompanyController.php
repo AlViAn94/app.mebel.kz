@@ -15,7 +15,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        //
+        return Test::get();
     }
 
     /**

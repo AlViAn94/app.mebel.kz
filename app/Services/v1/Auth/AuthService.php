@@ -43,7 +43,9 @@ class AuthService
 
         return response()->json([
             'token' => $token,
+            'user_id' => $user['id'],
             'name' => $user['name'],
+            'connection' => $user['connection_id'],
             'role' => $role
             ]);
     }

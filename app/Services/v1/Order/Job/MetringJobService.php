@@ -8,7 +8,7 @@ class MetringJobService
 {
     public function takeOrder($request)
     {
-        $order_id = $request['order_id'];
-        return Metring::takeMetring($order_id);
+        $id = $request['id'];
+        return Metring::takeMetring($id);
     }
 }

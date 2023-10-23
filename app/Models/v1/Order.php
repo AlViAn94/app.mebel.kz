@@ -2,10 +2,15 @@
 
 namespace App\Models\v1;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
+/**
+ * @mixin Builder
+ */
 class Order extends Model
 {
     use HasFactory, UsesTenantConnection;
@@ -53,18 +58,23 @@ class Order extends Model
     public function getAllPosition($id)
     {
         $design = Design::where('order_id', $id)->first();
+        $design['position'] = 'design';
         $metring = Metring::where('order_id', $id)->first();
+        $metring['position'] = 'metrings';
         $tehnologist = Technologist::where('order_id', $id)->first();
+        $tehnologist['position'] = 'technologists';
 
-        $position['design'][0] = $design;
-        $position['tehnologist'][0] = $tehnologist;
-        $position['metring'][0] = $metring;
+        $position[0] = $design;
+        $position[1] = $tehnologist;
+        $position[2] = $metring;
 
         $job = Job::where('order_id', $id)->get();
+        $i = 3;
         foreach ($job as $v) {
             $id_job = $v->id;
             $job1 = Job::where('id', $id_job)->first();
-            $position[$job1['position']][$id_job] = $job1;
+            $position[$i] = $job1;
+            $i++;
         }
         return $position;
     }
@@ -100,4 +110,72 @@ class Order extends Model
             return response()->json(["message" => "Заказ не найден!"]);
         }
     }
+
+    public static function list($data)
+    {
+        $search = $data['search'];
+        $status = $data['status'];
+        $sort = $data['sort'];
+        $asc = $data['asc'];
+
+        if (empty($sort)) {
+            $sort = 'created_at';
+        }
+
+        $orders = Order::where('status', $status)
+            ->where(function ($query) use ($search) {
+                $query->where('order_num', 'LIKE', "%{$search}%");
+            })
+            ->orderBy($sort, $asc ? 'asc' : 'desc')
+            ->paginate(20);
+
+        return $orders;
+    }
+
+    public static function listPosition($data)
+    {
+        $search = $data['search'];
+        $position = $data['position'];
+        $position_status = $data['position_status'];
+        $user = Auth::user();
+        $user_id = $user['id'];
+        $sort = $data['sort'];
+        $asc = $data['asc'];
+
+        if (empty($sort)) {
+            $sort = 'created_at';
+        }
+        $model = [];
+        switch ($position){
+            case 'metrings':
+                $model = Metring::where('user_id', $user_id)->where('status', $position_status)->get();
+                break;
+
+            case 'design':
+                $model = Design::where('user_id', $user_id)->where('status', $position_status)->get();
+                break;
+
+            case 'technologists':
+                $model = Technologist::where('user_id', $user_id)->where('status', $position_status)->get();
+                break;
+            case 'jobs':
+                $model = Job::where('user_id', $user_id)->where('status', $position_status)->get();
+                break;
+        }
+        $orders_id = [];
+        $i = 0;
+        foreach ($model as $v){
+            $orders_id[$i] = $v['order_id'];
+            $i++;
+        }
+        $orders = Order::whereIn('id', $orders_id)
+            ->where(function ($query) use ($search) {
+                $query->where('order_num', 'LIKE', "%{$search}%");
+            })
+            ->orderBy($sort, $asc ? 'asc' : 'desc')
+            ->paginate(20);
+
+        return $orders;
+    }
+
 }

@@ -8,15 +8,30 @@ use App\Services\v1\File\DownloadFileService;
 use App\Services\v1\File\SaveFileService;
 use App\Services\v1\File\UpdateFileService;
 use Illuminate\Http\Request;
+use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
 class FileController extends Controller
 {
     public function save(Request $request, SaveFileService $service)
     {
-        if ($request->hasFile('file') && $request->file('file')->isValid()) {
-            return $service->importFile($request->file('file'), $request->dir, $request->id);
+        $files = [];
+        $index = 0;
+        // Получите файлы и другие параметры
+        while ($request->hasFile('file' . $index)) {
+            $fileKey = 'file' . $index;
+            $files[$fileKey] = $request->file($fileKey);
+            $index++;
+        }
+        $dir = $request->input('dir');
+        $id = $request->input('id');
+
+        // Ваш код обработки файлов и параметров
+        $result = $service->importFiles($files, $dir, $id);
+
+        if ($result instanceof \Illuminate\Http\JsonResponse) {
+            return $result;
         } else {
-            return response()->json(['message' => 'Ошибка загрузки файла'], 400);
+            return response()->json(['message' => 'Файлы успешно сохранены!']);
         }
     }
 
@@ -27,10 +42,24 @@ class FileController extends Controller
 
     public function update(Request $request, UpdateFileService $service)
     {
-        if ($request->hasFile('file') && $request->file('file')->isValid()) {
-            return $service->updateFile($request->file('file'), $request->dir, $request->id);
+        $files = [];
+        $index = 0;
+        // Получите файлы и другие параметры
+        while ($request->hasFile('file' . $index)) {
+            $fileKey = 'file' . $index;
+            $files[$fileKey] = $request->file($fileKey);
+            $index++;
+        }
+        $dir = $request->input('dir');
+        $id = $request->input('id');
+
+        // Ваш код обработки файлов и параметров
+        $result = $service->importFiles($files, $dir, $id);
+
+        if ($result instanceof \Illuminate\Http\JsonResponse) {
+            return $result;
         } else {
-            return response()->json(['message' => 'Ошибка загрузки файла'], 400);
+            return response()->json(['message' => 'Файлы успешно сохранены!']);
         }
     }
 

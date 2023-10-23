@@ -8,7 +8,7 @@ class DesignJobService
 {
     public function takeOrder($request)
     {
-        $order_id = $request['order_id'];
-        return Design::takeDesign($order_id);
+        $id = $request['id'];
+        return Design::takeDesign($id);
     }
 }

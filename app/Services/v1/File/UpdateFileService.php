@@ -2,6 +2,9 @@
 
 namespace App\Services\v1\File;
 
+use App\Models\v1\Design;
+use App\Models\v1\Metring;
+use App\Models\v1\Technologist;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -10,44 +13,65 @@ use ZipArchive;
 
 class UpdateFileService
 {
-    public function updateFile($file, $db, $id)
+    public function importFiles($files, $db, $id)
     {
-        $model = DB::table($db)->where('order_id', $id)->first();
+        switch ($db){
+            case 'metrings':
+                $model = Metring::where('order_id', $id)->first();
+                break;
+
+            case 'design':
+                $model = Design::where('order_id', $id)->first();
+                break;
+
+            case 'technologists':
+                $model = Technologist::where('order_id', $id)->first();
+                break;
+        }
+
         if($model){
             $user = Auth::user();
             if($model->user_id != $user['id']){
                 return response()->json(['message' => 'У вас нет прав на это действие!'], 404);
             }
             // путь к старому файлу для удаления
-            $old_link = $model->file;
+//            $old_link = $model->file;
+            // Временная пока не подключимся к серверу
+            $old_link = str_replace(env('APP_URL'), public_path(), $model->file);
+            //
         }
 
         $zipName = Str::random(10) . '.zip';
         $savePath = public_path('downloads/files/' . $db . '/');
-
         $zipPath = $savePath . $zipName;
 
         $zip = new ZipArchive();
+
         if ($zip->open($zipPath, ZipArchive::CREATE) === true) {
-            $zip->addFile($file->getRealPath(), $file->getClientOriginalName());
+            foreach ($files as $file) {
+                $zip->addFile($file->getRealPath(), $file->getClientOriginalName());
+            }
             $zip->close();
         }
 
-        if (File::exists($file->getRealPath())) {
-            File::delete($file->getRealPath());
+        foreach ($files as $file) {
+            if (File::exists($file->getRealPath())) {
+                File::delete($file->getRealPath());
+            }
         }
-        $zipLink = $zipPath;
+
+        $zipLink = env('APP_URL') . '/downloads/files/' . $db . '/' . $zipName;
 
         $service = new AddLinkDataBaseService();
 
-        $result = $service->importFileLincDb($zipLink, $db, $id);
+        $result = $service->importFileLinkDb($model, $zipLink, $db, $id);
         if($result !== true){
             return $result;
         }else{
             if (file_exists($old_link)) {
                 unlink($old_link);
             }
-            return response()->json(['message' => 'Файл успешно сохранён!']);
+            return response()->json(['message' => 'Файл успешно заменён!']);
         }
     }
 }

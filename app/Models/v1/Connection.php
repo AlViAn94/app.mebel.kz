@@ -2,10 +2,25 @@
 
 namespace App\Models\v1;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Spatie\Multitenancy\Models\Tenant;
 
-class Connection extends Model
+/**
+ * @mixin Builder
+ */
+class Connection extends Tenant
 {
-    use HasFactory;
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = "connections";
+
+    protected $guarded = [];
+
+    public $timestamps = false;
+
+    protected $hidden = [
+    ];
 }

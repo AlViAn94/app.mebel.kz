@@ -9,7 +9,7 @@ class TechnologistJobService
 {
     public function takeOrder($request)
     {
-        $order_id = $request['order_id'];
-        return Technologist::takeTechnologist($order_id);
+        $id = $request['id'];
+        return Technologist::takeTechnologist($id);
     }
 }
