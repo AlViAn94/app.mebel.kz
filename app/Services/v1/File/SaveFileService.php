@@ -4,9 +4,9 @@ namespace App\Services\v1\File;
 
 use App\Models\v1\Design;
 use App\Models\v1\Metring;
+use App\Models\v1\Role;
 use App\Models\v1\Technologist;
 use Illuminate\Support\Facades\Auth;
-use App\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use ZipArchive;
@@ -14,17 +14,27 @@ class SaveFileService
 {
     public function importFiles($files, $db, $id)
     {
+        $user = Auth::user();
+        $user_id = $user['id'];
+
+        $roles = Role::getPositions($user_id);
+        $error = 'У вас нет прав на это действие.';
+
+        if (!in_array($db, $roles)) {
+            return response()->json(['message' => $error]);
+        }
+
         switch ($db){
             case 'metrings':
-                $model = Metring::where('order_id', $id)->first();
+                $model = Metring::where('id', $id)->first();
                 break;
 
             case 'design':
-                $model = Design::where('order_id', $id)->first();
+                $model = Design::where('id', $id)->first();
                 break;
 
             case 'technologists':
-                $model = Technologist::where('order_id', $id)->first();
+                $model = Technologist::where('id', $id)->first();
             break;
         }
 
@@ -38,7 +48,7 @@ class SaveFileService
             }
         }
 
-        $zipName = Str::random(10) . '.zip';
+        $zipName = Str::random(15) . '.zip';
         $savePath = public_path('downloads/files/' . $db . '/');
         $zipPath = $savePath . $zipName;
 

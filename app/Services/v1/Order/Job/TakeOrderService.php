@@ -17,39 +17,39 @@ class TakeOrderService
         $position = $data['position'];
         $user = Auth::user();
         $user_id = $user['id'];
-
         $roles = Role::getPositions($user_id);
         $error = 'Вы не можете взять заказ.';
+
         if (!in_array($position, $roles)) {
             return response()->json(['message' => $error]);
         }
 
         switch ($position){
             case 'metrings':
-                $model = Metring::takeOrder($data);
+                $model = Metring::takeMetring($data);
                 if(!$model){
                     return response()->json(['message' => $error]);
                 }
                 return Order::takeOrder($position);
 
             case 'design':
-                $model = Design::takeOrder($data);
+                $model = Design::takeDesign($data);
                 if(!$model){
                     return response()->json(['message' => $error]);
                 }
                 return Order::takeOrder($position);
 
             case 'technologists':
-                $model = Technologist::takeOrder($data);
+                $model = Technologist::takeTechnologist($data);
                 if(!$model){
                     return response()->json(['message' => $error]);
                 }
                 return Order::takeOrder($position);
 
             default:
-                $model = Job::takeOrder($data);
+                $model = Job::takeOrderJob($data);
                 if(!$model){
-                    return response()->json(['message' => $error]);
+                    return response()->json(['message' => 'Заказ уже взят.']);
                 }
                     return response()->json(['message' => 'Вы взяли заказ.']);
         }

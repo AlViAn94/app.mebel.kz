@@ -16,40 +16,21 @@ class Job extends Model
         'order_id',
         'position',
         'user_id',
+        'user_name',
+        'take_date',
+        'passed_date',
         'status'
     ];
 
-    public static function takeCard($id)
-    {
-        $user = Auth::user();
-        $user_id = $user->id;
-        $name = $user->name;
 
-        $datetime = Carbon::now();
-        $date = $datetime->format('Y-m-d');
-
-        $result = self::where('id', $id)->update([
-            'user_id' => $user_id,
-            'user_name' => $name,
-            'take_date' => $date,
-            'status' => 1
-        ]);
-
-        if ($result) {
-            return response()->json(['message' => 'Заказ успешно взят']);
-        } else {
-            return response()->json(['error' => 'Ошибка при сохранении записи.']);
-        }
-    }
-
-    public static function takeOrder($data)
+    public static function takeOrderJob($data)
     {
         $user = Auth::user();
         $user_id = $user['id'];
         $name = $user->name;
 
         $datetime = Carbon::now();
-        $date = $datetime->format('Y-m-d');
+        $date = $datetime->format('Y-m-d H:i');
 
         $model = self::where('id', $data['id'])->where('status', 0)->update([
             'user_id' => $user_id,
@@ -64,9 +45,9 @@ class Job extends Model
     public static function submittedOrder($data)
     {
         $datetime = Carbon::now();
-        $date = $datetime->format('Y-m-d');
+        $date = $datetime->format('Y-m-d H:i');
 
-        $model = self::where('id', $data['id'])->where('status', 1)->update([
+        $model = self::where('id', $data['id'])->where('user_id', $data['user_id'])->where('status', 1)->update([
             'passed_date' => $date,
             'status' => 2
         ]);

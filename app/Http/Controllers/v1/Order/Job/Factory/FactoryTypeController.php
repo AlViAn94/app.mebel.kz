@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1\Order\Job\Factory;
 
 use App\Http\Controllers\Controller;
+use App\Models\v1\PositionsType;
 use App\Services\v1\Order\Job\Factory\Position\DeletePositionService;
 use App\Services\v1\Order\Job\Factory\Position\NewPositionService;
 use Illuminate\Database\Query\Builder;
@@ -19,7 +20,7 @@ class FactoryTypeController extends Controller
 
     public function index()
     {
-        return DB::table('positions_type')->select('id', 'position', 'name')->get();
+        return PositionsType::get();
     }
 
     /**

@@ -14,55 +14,65 @@ class DeletedFileService
     {
         switch ($dir){
             case 'metrings':
-                $link = Metring::where('order_id', $id)->select('file')->first();
+                $link = Metring::where('id', $id)->select('file')->first();
                 break;
 
             case 'design':
-                $link = Design::where('order_id', $id)->select('file')->first();
+                $link = Design::where('id', $id)->select('file')->first();
                 break;
 
             case 'technologists':
-                $link = Technologist::where('order_id', $id)->select('file')->first();
+                $link = Technologist::where('id', $id)->select('file')->first();
                 break;
         }
         if($link->file == null){
             return response()->json(['message' => 'Файл не найден!'], 404);
         }
-
         // Временная пока не подключимся к серверу
-        $replacedPath = str_replace(env('APP_URL'), public_path(), $link->file);
+        $old_link = str_replace(env('APP_URL'), public_path(), $link->file);
         //
 
-        if (file_exists($replacedPath)) {
-            unlink($replacedPath);
+        if (file_exists($old_link)) {
+            unlink($old_link);
 
             switch ($dir){
                 case 'metrings':
-                    Metring::where('order_id', $id)->update([
+
+                    $metring = Metring::where('id', $id)->first();
+
+                    Metring::where('id', $id)->update([
                         'file' => null,
+                        'passed_date' => null,
                         'status' => 1
                     ]);
-                    Order::where('id', $id)->update([
+
+                    Order::where('id', $metring->order_id)->update([
                         $dir => 1
                     ]);
                     break;
 
                 case 'design':
-                    Design::where('order_id', $id)->update([
+                    $design = Design::where('id', $id)->first();
+
+                    Design::where('id', $id)->update([
                         'file' => null,
+                        'passed_date' => null,
                         'status' => 1
                     ]);
-                    Order::where('id', $id)->update([
+                    Order::where('id', $design->order_id)->update([
                         $dir => 1
                     ]);
                     break;
 
                 case 'technologists':
+                    $technologist = Technologist::where('id', $id)->first();
+
                     Technologist::where('order_id', $id)->update([
                         'file' => null,
+                        'passed_date' => null,
                         'status' => 1
                     ]);
-                    Order::where('id', $id)->update([
+                    Order::where('id', $technologist->order_id)->update([
                         $dir => 1,
                         'status' => 0
                     ]);

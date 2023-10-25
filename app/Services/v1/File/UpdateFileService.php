@@ -17,15 +17,15 @@ class UpdateFileService
     {
         switch ($db){
             case 'metrings':
-                $model = Metring::where('order_id', $id)->first();
+                $model = Metring::where('id', $id)->first();
                 break;
 
             case 'design':
-                $model = Design::where('order_id', $id)->first();
+                $model = Design::where('id', $id)->first();
                 break;
 
             case 'technologists':
-                $model = Technologist::where('order_id', $id)->first();
+                $model = Technologist::where('id', $id)->first();
                 break;
         }
 

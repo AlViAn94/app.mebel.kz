@@ -58,7 +58,6 @@ Route::middleware('auth:api','tenant')->group(function (){
             Route::resource('card', '\App\Http\Controllers\v1\Order\Job\Factory\FactoryCardController');
             // create new positions for the factory
             Route::resource('position', '\App\Http\Controllers\v1\Order\Job\Factory\FactoryTypeController');
-            Route::resource('take/card', '\App\Http\Controllers\v1\Order\Job\Factory\FactoryTakeCardController');
         });
 
 });// middleware auth:api, tenant

@@ -2,6 +2,7 @@
 
 namespace App\Services\v1\Auth;
 
+use App\Models\v1\Role;
 use App\Models\v1\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +32,7 @@ class AuthService
             return response()->json(['error' => $e], 500);
         }
 
-        $data = DB::table('user_role')->where('user_id', $user['id'])->get();
+        $data = Role::where('user_id', $user['id'])->get();
         $role = [];
         $i = 0;
 
