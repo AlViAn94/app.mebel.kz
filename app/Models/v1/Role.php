@@ -27,9 +27,9 @@ class Role extends Model
         ]);
     }
 
-    public static function deletedRole($data)
+    public static function getPositions($id)
     {
-
+        return self::where('user_id', $id)->get()->pluck('role')->toArray();
     }
 
 }

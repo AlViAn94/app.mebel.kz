@@ -117,18 +117,23 @@ class Order extends Model
         $status = $data['status'];
         $sort = $data['sort'];
         $asc = $data['asc'];
+        $count = $data['count'];
+        $page = $data['page'];
 
         if (empty($sort)) {
             $sort = 'created_at';
         }
+        $firstItemNumber = ($page - 1) * $page + 1;
 
         $orders = Order::where('status', $status)
             ->where(function ($query) use ($search) {
                 $query->where('order_num', 'LIKE', "%{$search}%");
             })
             ->orderBy($sort, $asc ? 'asc' : 'desc')
-            ->paginate(20);
-
+            ->paginate($count, ['*'], 'page', $page);
+        foreach ($orders as $v) {
+            $v->order_number = $firstItemNumber++;
+        }
         return $orders;
     }
 
@@ -141,11 +146,13 @@ class Order extends Model
         $user_id = $user['id'];
         $sort = $data['sort'];
         $asc = $data['asc'];
+        $count = $data['count'];
+        $page = $data['page'];
 
         if (empty($sort)) {
             $sort = 'created_at';
         }
-        $model = [];
+
         switch ($position){
             case 'metrings':
                 $model = Metring::where('user_id', $user_id)->where('status', $position_status)->get();
@@ -158,24 +165,40 @@ class Order extends Model
             case 'technologists':
                 $model = Technologist::where('user_id', $user_id)->where('status', $position_status)->get();
                 break;
-            case 'jobs':
-                $model = Job::where('user_id', $user_id)->where('status', $position_status)->get();
+
+            default:
+                $model = Job::where('user_id', $user_id)->where('status', $position_status)->where('position', $position)->get();
                 break;
         }
+
         $orders_id = [];
         $i = 0;
         foreach ($model as $v){
             $orders_id[$i] = $v['order_id'];
             $i++;
         }
+        $firstItemNumber = ($page - 1) * $page + 1;
+
         $orders = Order::whereIn('id', $orders_id)
             ->where(function ($query) use ($search) {
                 $query->where('order_num', 'LIKE', "%{$search}%");
             })
             ->orderBy($sort, $asc ? 'asc' : 'desc')
-            ->paginate(20);
-
+            ->paginate($count, ['*'], 'page', $page);
+        foreach ($orders as $v) {
+            $v->order_number = $firstItemNumber++;
+        }
         return $orders;
     }
 
+    public static function takeOrder($position)
+    {
+        $order = Order::where($position, $position)->update([
+            'metrings' => 1
+        ]);
+        if(!$order){
+            return response()->json(['message' => 'Заказ не взят.']);
+        }
+        return response()->json(['message' => 'Вы взяли заказ.']);
+    }
 }

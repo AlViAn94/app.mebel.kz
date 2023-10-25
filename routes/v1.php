@@ -37,9 +37,8 @@ Route::middleware('auth:api','tenant')->group(function (){
 
         // Office jobs
         Route::prefix('office')->group(function () {
-            Route::resource('metring', '\App\Http\Controllers\v1\Order\Job\MetringController')->only(['create', 'show', 'update', 'destroy']);
-            Route::resource('design', '\App\Http\Controllers\v1\Order\Job\DesignController')->only(['create', 'show', 'update', 'destroy']);
-            Route::resource('technologist', '\App\Http\Controllers\v1\Order\Job\TechnologistController')->only(['create', 'show', 'update', 'destroy']);
+            Route::post('take/order', [\App\Http\Controllers\v1\Order\Job\TakeOrderController::class, 'takeOrder']);
+            Route::post('submitted/order', [App\Http\Controllers\v1\Order\Job\SubmittedOrderController::class, 'submittedOrder']);
         });
 
         // Files controller
@@ -60,8 +59,6 @@ Route::middleware('auth:api','tenant')->group(function (){
             // create new positions for the factory
             Route::resource('position', '\App\Http\Controllers\v1\Order\Job\Factory\FactoryTypeController');
             Route::resource('take/card', '\App\Http\Controllers\v1\Order\Job\Factory\FactoryTakeCardController');
-
-
         });
 
 });// middleware auth:api, tenant

@@ -11,11 +11,9 @@ class AddNewCard
         $order = $request->order_id;
         $position = $request->position;
 
-        $job = Job::create([
+        return Job::create([
             'order_id' => $order,
             'position' => $position
         ]);
-
-        return $job;
     }
 }
