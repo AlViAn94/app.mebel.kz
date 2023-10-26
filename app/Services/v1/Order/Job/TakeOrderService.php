@@ -21,35 +21,35 @@ class TakeOrderService
         $error = 'Вы не можете взять заказ.';
 
         if (!in_array($position, $roles)) {
-            return response()->json(['message' => $error]);
+            return response()->json(['message' => $error], 404);
         }
 
         switch ($position){
             case 'metrings':
-                $model = Metring::takeMetring($data);
-                if(!$model){
-                    return response()->json(['message' => $error]);
+                $order_id = Metring::takeMetring($data);
+                if(!$order_id){
+                    return response()->json(['message' => $error], 404);
                 }
-                return Order::takeOrder($position);
+                return Order::takeOrder($position, $order_id);
 
             case 'design':
-                $model = Design::takeDesign($data);
-                if(!$model){
-                    return response()->json(['message' => $error]);
+                $order_id = Design::takeDesign($data);
+                if(!$order_id){
+                    return response()->json(['message' => $error], 404);
                 }
-                return Order::takeOrder($position);
+                return Order::takeOrder($position, $order_id);
 
             case 'technologists':
-                $model = Technologist::takeTechnologist($data);
-                if(!$model){
-                    return response()->json(['message' => $error]);
+                $order_id = Technologist::takeTechnologist($data);
+                if(!$order_id){
+                    return response()->json(['message' => $error], 404);
                 }
-                return Order::takeOrder($position);
+                return Order::takeOrder($position, $order_id);
 
             default:
                 $model = Job::takeOrderJob($data);
                 if(!$model){
-                    return response()->json(['message' => 'Заказ уже взят.']);
+                    return response()->json(['message' => 'Заказ уже взят.'], 404);
                 }
                     return response()->json(['message' => 'Вы взяли заказ.']);
         }

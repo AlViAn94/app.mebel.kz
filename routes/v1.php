@@ -17,8 +17,6 @@ Route::middleware('auth:api','tenant')->group(function (){
                 Route::get('/check-user', 'actionCheckUser');
             });
 
-        Route::post('/reg-personal', [\App\Http\Controllers\v1\Auth\RegistUserController::class, 'actionRegistPersonal']);
-
         // Clients
         Route::prefix('clients')->group(function () {
 

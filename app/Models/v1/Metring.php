@@ -31,14 +31,18 @@ class Metring extends Model
         $datetime = Carbon::now();
         $date = $datetime->format('Y-m-d H:i');
 
-        $model = self::where('id', $data['id'])->where('status', 0)->update([
+        self::where('id', $data['id'])->where('status', 0)->update([
             'user_id' => $user_id,
             'user_name' => $name,
             'take_date' => $date,
             'status' => 1
         ]);
 
-        return $model;
+        $order = self::where('id', $data['id'])->select('order_id')->first();
+
+        $order_id = $order['order_id'];
+
+        return $order_id;
     }
 
     public static function submittedOrder($data)
@@ -65,6 +69,6 @@ class Metring extends Model
         if($result){
             return response()->json(['message' => 'Карта сброшена.']);
         }
-        return response()->json(['message' => 'Что то пошло не так.']);
+        return response()->json(['message' => 'Что то пошло не так.'], 404);
     }
 }

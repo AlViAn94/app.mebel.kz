@@ -107,7 +107,7 @@ class Order extends Model
 
             return response()->json(["message" => "Заказ успешно обновлен!"]);
         } else {
-            return response()->json(["message" => "Заказ не найден!"]);
+            return response()->json(["message" => "Заказ не найден!"], 404);
         }
     }
 
@@ -131,8 +131,12 @@ class Order extends Model
             })
             ->orderBy($sort, $asc ? 'asc' : 'desc')
             ->paginate($count, ['*'], 'page', $page);
+
         foreach ($orders as $v) {
             $v->order_number = $firstItemNumber++;
+            $client = Client::where('id', $v['client_id'])->first();
+            $full_name = $client['name'] . ' ' . $client['surname'] . ' ' . $client['lastname'];
+            $v->full_name = $full_name;
         }
         return $orders;
     }
@@ -181,23 +185,28 @@ class Order extends Model
 
         $orders = Order::whereIn('id', $orders_id)
             ->where(function ($query) use ($search) {
-                $query->where('order_num', 'LIKE', "%{$search}%");
+                $query
+                    ->where('order_num', 'LIKE', "%{$search}%");
             })
             ->orderBy($sort, $asc ? 'asc' : 'desc')
             ->paginate($count, ['*'], 'page', $page);
+
         foreach ($orders as $v) {
+            $client = Client::where('id', $v['client_id'])->first();
+            $full_name = $client['name'] . ' ' . $client['surname'] . ' ' . $client['lastname'];
             $v->order_number = $firstItemNumber++;
+            $v->full_name = $full_name;
         }
         return $orders;
     }
 
-    public static function takeOrder($position)
+    public static function takeOrder($position, $order_id)
     {
-        $order = Order::where($position, $position)->update([
-            'metrings' => 1
+        $order = Order::where($position, $position)->where('id', $order_id)->update([
+            $position => 1
         ]);
         if(!$order){
-            return response()->json(['message' => 'Заказ не взят.']);
+            return response()->json(['message' => 'Заказ не взят.'], 404);
         }
         return response()->json(['message' => 'Вы взяли заказ.']);
     }

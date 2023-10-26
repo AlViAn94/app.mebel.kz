@@ -11,6 +11,7 @@ class AddNewCard
     {
         $order = $request->order_id;
         $position = $request->position;
+        $position_name = $request->position_name;
         $order = Order::whereId($order)->first();
 
         if(!$order){
@@ -18,7 +19,8 @@ class AddNewCard
         }else{
             Job::create([
                 'order_id' => $order['id'],
-                'position' => $position
+                'position' => $position,
+                'position_name' => $position_name
             ]);
             return response()->json(['message' => 'Карточка добавлена.']);
         }

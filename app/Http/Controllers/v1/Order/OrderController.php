@@ -6,7 +6,6 @@ use App\Services\v1\Order\CreatedOrderService;
 use App\Services\v1\Order\DeletedOrderService;
 use App\Http\Requests\v1\Other\iDRequest;
 use App\Http\Controllers\Controller;
-use App\Services\v1\Order\SortOrderService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\v1\Client;

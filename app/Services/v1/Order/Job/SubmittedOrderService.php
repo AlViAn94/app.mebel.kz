@@ -17,11 +17,11 @@ class SubmittedOrderService
 
         $roles = Role::getPositions($user_id);
         if (!in_array($position, $roles)) {
-            return response()->json(['message' => 'Вы не можете закончить этот заказ.']);
+            return response()->json(['message' => 'Вы не можете закончить этот заказ.'], 404);
         }
                 $model = Job::submittedOrder($data);
                 if(!$model){
-                    return response()->json(['message' => 'Что то пошло не так, обновите страницу.']);
+                    return response()->json(['message' => 'Что то пошло не так, обновите страницу.'], 404);
                 }
                     return response()->json(['message' => 'Вы сдали заказ.']);
     }

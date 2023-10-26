@@ -23,37 +23,34 @@ class AddLinkDataBaseService
             }
             switch ($db){
                 case 'metrings':
-                    $model = Metring::where('id', $id)->update([
+                    $model = Metring::where('order_id', $id)->update([
                         'file' => $zipLink,
                         'status' => 2,
                         'passed_date' => $date
                     ]);
-                    $order_id = Metring::whereId($id)->select('order_id')->first();
                     break;
 
                 case 'design':
-                    $model = Design::where('id', $id)->update([
+                    $model = Design::where('order_id', $id)->update([
                         'file' => $zipLink,
                         'status' => 2,
                         'passed_date' => $date
                     ]);
-                    $order_id = Design::whereId($id)->select('order_id')->first();
                     break;
 
                 case 'technologists':
-                    $model = Technologist::where('id', $id)->update([
+                    $model = Technologist::where('order_id', $id)->update([
                         'file' => $zipLink,
                         'status' => 2,
                         'passed_date' => $date
                     ]);
-                    $order_id = Technologist::whereId($id)->select('order_id')->first();
                     break;
             }
-            Order::where('id', $order_id['order_id'])->update([
+            Order::where('id', $id)->update([
                 $db => 2,
             ]);
             if($db == 'technologists'){
-                Order::where('id', $order_id['order_id'])->update([
+                Order::where('id', $id)->update([
                     'status' => 1
                 ]);
             }
