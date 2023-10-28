@@ -4,11 +4,10 @@ namespace App\Models\v1;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
 class Role extends Model
 {
-    use HasFactory, UsesTenantConnection;
+    use HasFactory;
 
     protected $table = 'user_role';
 
@@ -31,5 +30,4 @@ class Role extends Model
     {
         return self::where('user_id', $id)->get()->pluck('role')->toArray();
     }
-
 }

@@ -26,6 +26,10 @@ class TakeOrderService
 
         switch ($position){
             case 'metrings':
+                $card = Metring::find($data['id']);
+                if($card['user_id'] != null){
+                    return response()->json(['message' => 'Заказ уже взят.'], 404);
+                }
                 $order_id = Metring::takeMetring($data);
                 if(!$order_id){
                     return response()->json(['message' => $error], 404);
@@ -33,6 +37,10 @@ class TakeOrderService
                 return Order::takeOrder($position, $order_id);
 
             case 'design':
+                $card = Design::find($data['id']);
+                if($card['user_id'] != null){
+                    return response()->json(['message' => 'Заказ уже взят.'], 404);
+                }
                 $order_id = Design::takeDesign($data);
                 if(!$order_id){
                     return response()->json(['message' => $error], 404);
@@ -40,6 +48,10 @@ class TakeOrderService
                 return Order::takeOrder($position, $order_id);
 
             case 'technologists':
+                $card = Technologist::find($data['id']);
+                if($card['user_id'] != null){
+                    return response()->json(['message' => 'Заказ уже взят.'], 404);
+                }
                 $order_id = Technologist::takeTechnologist($data);
                 if(!$order_id){
                     return response()->json(['message' => $error], 404);

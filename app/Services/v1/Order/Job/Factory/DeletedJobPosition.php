@@ -13,12 +13,12 @@ class DeletedJobPosition
 
         if ($job) {
             if($job->user_id != null){
-                return response()->json(['error' => 'Нельзя удалить принятый заказ!'], 404);
+                return response()->json(['message' => 'Нельзя удалить принятый заказ!'], 404);
             }
             $job->delete();
             return response()->json(['message' => 'Запись успешно удалена!']);
         } else {
-            return response()->json(['error' => 'Не удалось удалить!'], 404);
+            return response()->json(['message' => 'Не удалось удалить!'], 404);
         }
     }
 }

@@ -22,7 +22,7 @@ class DeletedOrderService
                     return response()->json(['message' => 'Невозможно удалить заказ!']);
                 }
             } else {
-                return response()->json(['error' => 'Запись не найдена'], 404);
+                return response()->json(['message' => 'Запись не найдена'], 404);
             }
         });
     }

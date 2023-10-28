@@ -39,7 +39,7 @@ class RegistAdminService
         });
             return response()->json(['message' => 'Успешно зарегистрирован!']);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e], 500);
+            return response()->json(['message' => $e], 500);
         }
 
     }

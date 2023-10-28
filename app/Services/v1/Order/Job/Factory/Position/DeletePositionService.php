@@ -17,7 +17,7 @@ class DeletePositionService
             RoleType::where('position_id', $id)->delete();
             return response()->json(['message' => 'Позиция удалена!']);
         } else {
-            return response()->json(['error' => 'Не удалось удалить позицию.'], 400);
+            return response()->json(['message' => 'Не удалось удалить позицию.'], 400);
         }
     }
 }

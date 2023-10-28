@@ -15,7 +15,7 @@ class GetFullPositionService
                     $result = $order->getAllPosition($order['id']);
                     return $result;
                 } else {
-                    return response()->json(['error' => 'Запись не найдена'], 404);
+                    return response()->json(['message' => 'Запись не найдена'], 404);
                 }
     }
 }

@@ -1,7 +1,12 @@
 <?php
 
-namespace App\Models\v1;
+namespace App\Models\v2;
 
+use App\Models\v1\Client;
+use App\Models\v1\Design;
+use App\Models\v1\Job;
+use App\Models\v1\Metring;
+use App\Models\v1\Technologist;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -121,6 +126,28 @@ class Order extends Model
         $asc = $data['asc'];
         $count = $data['count'];
         $page = $data['page'];
+        $position = ['position'];
+
+        $user = Auth::user();
+        $user_id = $user['id'];
+
+        switch ($position){
+            case 'metrings':
+                $model = Metring::where('user_id', $user_id)->where('status', $position_status)->get();
+                break;
+
+            case 'design':
+                $model = Design::where('user_id', $user_id)->where('status', $position_status)->get();
+                break;
+
+            case 'technologists':
+                $model = Technologist::where('user_id', $user_id)->where('status', $position_status)->get();
+                break;
+
+            default:
+                $model = Job::where('user_id', $user_id)->where('status', $position_status)->where('position', $position)->get();
+                break;
+        }
 
         if (empty($sort)) {
             $sort = 'created_at';

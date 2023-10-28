@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\v1\Auth;
+namespace App\Http\Requests\v1\Admin;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class RgistAdminRequest extends FormRequest
+class RequestConfirmPassword extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,13 +26,12 @@ class RgistAdminRequest extends FormRequest
     public function rules()
     {
         return [
-            'iin' => 'required|numeric|digits:12',
-            'name' => 'required|string',
-            'email' => 'required|email',
-            'password' => 'required',
-            'position' => 'required|string'
+            "email" => 'required|email',
+            "password" => 'required|min:8',
+            "password_confirm" => 'required|min:8'
         ];
     }
+
     /**
      * Handle a failed validation attempt.
      *

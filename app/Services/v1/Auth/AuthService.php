@@ -18,18 +18,18 @@ class AuthService
             $user = User::chechEmail($data['email']);
 
             if (! $user) {
-                return response()->json(['error' => 'User not found'], 404);
+                return response()->json(['message' => 'User not found'], 404);
             }
 
             if (! Hash::check($data['password'], $user->password)) {
-                return response()->json(['error' => 'Invalid credentials'], 401);
+                return response()->json(['message' => 'Invalid credentials'], 401);
             }
 
             if (! $token = JWTAuth::fromUser($user)) {
-                return response()->json(['error' => 'Could not create token'], 500);
+                return response()->json(['message' => 'Could not create token'], 500);
             }
         } catch (JWTException $e) {
-            return response()->json(['error' => $e], 500);
+            return response()->json(['message' => $e], 500);
         }
 
         $data = Role::where('user_id', $user['id'])->get();
@@ -57,7 +57,7 @@ class AuthService
             $newToken = JWTAuth::parseToken()->refresh();
             return response()->json(['access_token' => $newToken]);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e], 401);
+            return response()->json(['message' => $e], 401);
         }
     }
 

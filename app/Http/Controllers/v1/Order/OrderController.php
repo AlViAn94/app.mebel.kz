@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\v1\Order;
 
+use App\Services\v1\Order\CompletedOrderService;
 use App\Services\v1\Order\CreatedOrderService;
 use App\Services\v1\Order\DeletedOrderService;
 use App\Http\Requests\v1\Other\iDRequest;
@@ -50,8 +51,10 @@ class OrderController extends Controller
         return $service->deletedOrder($request->id);
     }
 
-
-
+    public function completed($id, CompletedOrderService $service)
+    {
+        return $service->completedOrder($id);
+    }
     // tests for mds project
     public function actionTest()
     {

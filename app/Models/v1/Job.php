@@ -14,11 +14,12 @@ class Job extends Model
 
     protected $fillable = [
         'order_id',
-        'position',
+        'position_name',
         'user_id',
         'user_name',
         'take_date',
         'passed_date',
+        'position',
         'status'
     ];
 

@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\v1\Other;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -36,5 +38,17 @@ class iDRequest extends FormRequest
         return [
             'id' => 'required|numeric'
         ];
+    }
+    /**
+     * Handle a failed validation attempt.
+     *
+     * @param \Illuminate\Contracts\Validation\Validator $validator
+     * @return void
+     *
+     * @throws \Illuminate\Http\Exceptions\HttpResponseException
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json(['message' => $validator->errors()->first()], 400));
     }
 }

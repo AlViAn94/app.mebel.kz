@@ -1,14 +1,15 @@
 <?php
 
+use App\Http\Controllers\v1\Admin\PassConfirmController;
 use App\Http\Controllers\v1\Auth\AuthController;
 use App\Http\Controllers\v1\Order\OrderController;
 use Illuminate\Support\Facades\Route;
 
 // version 1.0 API
 Route::post('/login', [AuthController::class, 'actionLoginUser']);
+Route::post('admin/user/confirm', [PassConfirmController::class, 'addPassword']);
 
 Route::middleware('auth:api','tenant')->group(function (){
-
         // user interface
         Route::controller(AuthController::class)
             ->group(function (){
@@ -16,6 +17,11 @@ Route::middleware('auth:api','tenant')->group(function (){
                 Route::get('/logout', 'actionLogoutUser');
                 Route::get('/check-user', 'actionCheckUser');
             });
+
+        // Admin
+        Route::prefix('admin')->group(function (){
+           Route::resource('users', '\App\Http\Controllers\v1\Admin\UsersController');
+        });
 
         // Clients
         Route::prefix('clients')->group(function () {
@@ -29,6 +35,7 @@ Route::middleware('auth:api','tenant')->group(function (){
             Route::post('list', [\App\Http\Controllers\v1\Order\OrderController::class, 'list']);
             Route::post('list/position', [\App\Http\Controllers\v1\Order\OrderController::class, 'listPosition']);
             Route::get('positions', [\App\Http\Controllers\v1\Order\GetFullPositionController::class, 'actionGetFullPosition']);
+            Route::get('completed/{id}', [\App\Http\Controllers\v1\Order\OrderController::class, 'completed']);
         });
 
         Route::resource('orders', '\App\Http\Controllers\v1\Order\OrderController')->only(['create', 'show', 'update', 'destroy']);
@@ -56,6 +63,8 @@ Route::middleware('auth:api','tenant')->group(function (){
             Route::resource('card', '\App\Http\Controllers\v1\Order\Job\Factory\FactoryCardController');
             // create new positions for the factory
             Route::resource('position', '\App\Http\Controllers\v1\Order\Job\Factory\FactoryTypeController');
+            Route::get('users/list', [App\Http\Controllers\v1\Order\Job\Factory\FactoryDirController::class, 'index']);
+            Route::post('appoint/user', [App\Http\Controllers\v1\Order\Job\Factory\FactoryDirController::class, 'store']);
         });
 
 });// middleware auth:api, tenant

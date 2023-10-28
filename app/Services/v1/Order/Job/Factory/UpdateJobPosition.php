@@ -20,7 +20,6 @@ class UpdateJobPosition
 
     public function updatePosition($request, $id)
     {
-        $job = Job::find($id);
         $position = $request->position;
 
         switch ($position){
@@ -63,16 +62,22 @@ class UpdateJobPosition
                 break;
 
             default:
-                $job->update([
-                    'user_id' => null,
-                    'user_name' => null,
-                    'take_date' => null,
-                    'passed_date' => null,
-                    'status' => 0
+                $job = Job::find($id);
+                if($job){
+                    $job->update([
+                        'user_id' => null,
+                        'user_name' => null,
+                        'take_date' => null,
+                        'passed_date' => null,
+                        'status' => 0
                     ]);
+                }else{
+                    return response()->json(['message' => 'Карта не найдена.'], 404);
+                }
+
                 return response()->json(['message' => 'Карта успешно сброшена!']);
         }
 
-            return response()->json(['error' => 'Не удалось сбросить!'], 404);
+            return response()->json(['message' => 'Не удалось сбросить.'], 404);
     }
 }

@@ -24,7 +24,7 @@ class NewPositionService
             ]);
             return response()->json(['message' => 'Позиция создана!']);
         } else {
-            return response()->json(['error' => 'Дублирующаяся позиция.'], 400);
+            return response()->json(['message' => 'Дублирующаяся позиция.'], 400);
         }
     }
 }

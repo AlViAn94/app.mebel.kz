@@ -8,7 +8,6 @@ use App\Services\v1\Order\Job\Factory\Position\DeletePositionService;
 use App\Services\v1\Order\Job\Factory\Position\NewPositionService;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class FactoryTypeController extends Controller
 {
