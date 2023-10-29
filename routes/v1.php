@@ -43,7 +43,6 @@ Route::middleware('auth:api','tenant')->group(function (){
         // Office jobs
         Route::prefix('office')->group(function () {
             Route::post('take/order', [\App\Http\Controllers\v1\Order\Job\TakeOrderController::class, 'takeOrder']);
-            Route::post('submitted/order', [App\Http\Controllers\v1\Order\Job\SubmittedOrderController::class, 'submittedOrder']);
         });
 
         // Files controller
@@ -59,9 +58,9 @@ Route::middleware('auth:api','tenant')->group(function (){
 
         // factory
         Route::prefix('factory')->group(function () {
-            // create a new card for factory to accept a new order
             Route::resource('card', '\App\Http\Controllers\v1\Order\Job\Factory\FactoryCardController');
-            // create new positions for the factory
+            Route::post('submitted/order', [App\Http\Controllers\v1\Order\Job\SubmittedOrderController::class, 'submittedOrder']);
+            Route::post('cancel/order', [App\Http\Controllers\v1\Order\Job\CancelOrderController::class, 'store']);
             Route::resource('position', '\App\Http\Controllers\v1\Order\Job\Factory\FactoryTypeController');
             Route::get('users/list', [App\Http\Controllers\v1\Order\Job\Factory\FactoryDirController::class, 'index']);
             Route::post('appoint/user', [App\Http\Controllers\v1\Order\Job\Factory\FactoryDirController::class, 'store']);

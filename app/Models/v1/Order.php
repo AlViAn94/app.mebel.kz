@@ -178,9 +178,15 @@ class Order extends Model
         }
 
         $orders_id = [];
+        $job_id = [];
+        $take_date = [];
+        $passed_date = [];
         $i = 0;
         foreach ($model as $v){
             $orders_id[$i] = $v['order_id'];
+            $job_id[$i] = $v['id'];
+            $take_date[$i] = $v['take_date'];
+            $passed_date[$i] = $v['passed_date'];
             $i++;
         }
         $firstItemNumber = ($page - 1) * $page + 1;
@@ -192,12 +198,16 @@ class Order extends Model
             })
             ->orderBy($sort, $asc ? 'asc' : 'desc')
             ->paginate($count, ['*'], 'page', $page);
-
+        $s = 0;
         foreach ($orders as $v) {
             $client = Client::where('id', $v['client_id'])->first();
             $full_name = $client['name'] . ' ' . $client['surname'] . ' ' . $client['lastname'];
             $v->order_number = $firstItemNumber++;
             $v->full_name = $full_name;
+            $v->card_id = $job_id[$s];
+            $v->take_date = $take_date[$s];
+            $v->passed_date = $passed_date[$s];
+            $s++;
         }
         return $orders;
     }

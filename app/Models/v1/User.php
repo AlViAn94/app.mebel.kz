@@ -111,14 +111,24 @@ class User extends Authenticatable implements JWTSubject
             'foreman',
             'super_admin',
         ];
+        $data = [];
+        $i = 0;
+        $role = Role::whereNotIn('role', $filter)->get()->toArray();
 
-        $results = self::where('connection_id', $connection)
-            ->whereNotIn('position', $filter)
-            ->get();
+        foreach ($role as $item) {
+            $results = self::where('id', $item['user_id'])
+                ->where('connection_id', $connection)
+                ->first()->toArray();
+            $results['position'] = $item['role'];
+            if($results != null){
+                $data[$i] = $results;
+                $i++;
+            }
+        }
 
-        if(!$results){
+        if(!$data){
             return response()->json(['message' => 'Не верные данные'], 404);
         }
-        return $results;
+        return $data;
     }
 }
