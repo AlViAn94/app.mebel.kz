@@ -191,13 +191,25 @@ class Order extends Model
         }
         $firstItemNumber = ($page - 1) * $page + 1;
 
-        $orders = Order::whereIn('id', $orders_id)
-            ->where(function ($query) use ($search) {
-                $query
-                    ->where('order_num', 'LIKE', "%{$search}%");
-            })
-            ->orderBy($sort, $asc ? 'asc' : 'desc')
-            ->paginate($count, ['*'], 'page', $page);
+        if(isset($data['status'])){
+            $orders = Order::whereIn('id', $orders_id)
+                ->where('status', $data['status'])
+                ->where(function ($query) use ($search) {
+                    $query
+                        ->where('order_num', 'LIKE', "%{$search}%");
+                })
+                ->orderBy($sort, $asc ? 'asc' : 'desc')
+                ->paginate($count, ['*'], 'page', $page);
+        }else{
+            $orders = Order::whereIn('id', $orders_id)
+                ->where(function ($query) use ($search) {
+                    $query
+                        ->where('order_num', 'LIKE', "%{$search}%");
+                })
+                ->orderBy($sort, $asc ? 'asc' : 'desc')
+                ->paginate($count, ['*'], 'page', $page);
+        }
+
         $s = 0;
         foreach ($orders as $v) {
             $client = Client::where('id', $v['client_id'])->first();
