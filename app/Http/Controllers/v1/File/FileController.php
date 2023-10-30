@@ -54,7 +54,7 @@ class FileController extends Controller
         $id = $request->input('id');
 
         // Ваш код обработки файлов и параметров
-        $result = $service->importFiles($files, $dir, $id);
+        $result = $service->updateFiles($files, $dir, $id);
 
         if ($result instanceof \Illuminate\Http\JsonResponse) {
             return $result;

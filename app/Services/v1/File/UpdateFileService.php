@@ -13,7 +13,7 @@ use ZipArchive;
 
 class UpdateFileService
 {
-    public function importFiles($files, $db, $id)
+    public function updateFiles($files, $db, $id)
     {
         switch ($db){
             case 'metrings':
@@ -49,7 +49,11 @@ class UpdateFileService
             }
             $zip->close();
         }
-
+        if (file_exists($old_link)) {
+            unlink($old_link);
+        }else{
+            return response()->json(['message' => 'файл не найден.'], 404);
+        }
         foreach ($files as $file) {
             if (File::exists($file->getRealPath())) {
                 File::delete($file->getRealPath());
@@ -64,9 +68,6 @@ class UpdateFileService
         if($result !== true){
             return $result;
         }else{
-            if (file_exists($old_link)) {
-                unlink($old_link);
-            }
             return response()->json(['message' => 'Файл успешно заменён!']);
         }
     }
