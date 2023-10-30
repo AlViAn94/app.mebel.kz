@@ -29,8 +29,7 @@ class DeletedFileService
             return response()->json(['message' => 'Файл не найден!'], 404);
         }
 
-        // путь к временному файлу
-        $old_link = $link->file;
+        $old_link = str_replace(env('APP_URL'), public_path(), $link->file);
 
         if (file_exists($old_link)) {
             unlink($old_link);

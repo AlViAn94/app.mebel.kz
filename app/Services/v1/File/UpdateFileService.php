@@ -35,7 +35,7 @@ class UpdateFileService
                 return response()->json(['message' => 'У вас нет прав на это действие!'], 404);
             }
         }
-        $old_link = $model->file;
+        $old_link = str_replace(env('APP_URL'), public_path(), $model->file);
 
         $zipName = Str::random(10) . '.zip';
         $savePath = public_path('downloads/files/' . $db . '/');
@@ -65,15 +65,8 @@ class UpdateFileService
             return $result;
         }else{
             if (file_exists($old_link)) {
-                $real_path = realpath($old_link);
-                if ($real_path) {
-                    unlink($real_path);
-                } else {
-                    echo "Не удалось разрешить символическую ссылку.";
+                    unlink($old_link);
                 }
-            } else {
-                echo "Файл не существует.";
-            }
             return response()->json(['message' => 'Файл успешно заменён!']);
         }
 
