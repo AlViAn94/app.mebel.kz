@@ -7,9 +7,9 @@ use App\Models\v1\Role;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
-class CompletedOrderService
+class SendOrderService
 {
-    public function completedOrder($id)
+    public function sendOrder($id)
     {
         $user = Auth::user();
         $user_id = $user['id'];
@@ -26,12 +26,12 @@ class CompletedOrderService
         $order = Order::find($id);
         if($order){
 
-            if($order['status'] >= 3){
+            if($order['status'] >= 2){
                 return response()->json(['message' => 'Заказ уже завершён.'], 404);
             }
 
             $order->update([
-                'status' => 3,
+                'status' => 2,
                 'date_completed' => $date
             ]);
             return response()->json(['message' => 'Заказ завершён.']);

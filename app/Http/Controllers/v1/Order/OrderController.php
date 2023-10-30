@@ -7,7 +7,7 @@ use App\Services\v1\Order\CreatedOrderService;
 use App\Services\v1\Order\DeletedOrderService;
 use App\Http\Requests\v1\Other\iDRequest;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
+use App\Services\v1\Order\SendOrderService;
 use Illuminate\Http\Request;
 use App\Models\v1\Client;
 use App\Models\v1\Order;
@@ -33,7 +33,7 @@ class OrderController extends Controller
     {
         $id = $request->id;
         $result = [];
-        $order = Order::where('id', $id)->first();
+        $order = Order::findById($id);
         $client = Client::where('id', $order['client_id'])->first();
         $result['order'] = $order;
         $result['client'] = $client;
@@ -51,41 +51,13 @@ class OrderController extends Controller
         return $service->deletedOrder($request->id);
     }
 
+    public function send($id, SendOrderService $service)
+    {
+        return $service->sendOrder($id);
+    }
+
     public function completed($id, CompletedOrderService $service)
     {
         return $service->completedOrder($id);
     }
-    // tests for mds project
-    public function actionTest()
-    {
-        // Выполните SQL-запрос и получите результаты
-        $results = DB::select('SELECT iin, name, email FROM users');
-        $date = date('Y:m:d_H:m:s');
-        // Создайте уникальное имя файла на основе временной метки
-        $fileName = "export_{$date}.csv";
-
-        // Определите путь к файлу в директории public
-        $filePath = public_path("downloads/{$fileName}");
-
-        // Откройте файл для записи
-        $fp = fopen($filePath, 'w');
-
-        // Запишите названия столбцов в CSV
-        $column_names = array('iin', 'name', 'email');
-        fputcsv($fp, $column_names);
-
-        // Запишите данные в CSV
-        foreach ($results as $row) {
-            fputcsv($fp, (array) $row);
-        }
-
-        fclose($fp);
-
-        // Сгенерируйте URL для скачивания файла
-        $fileUrl = asset("downloads/{$fileName}");
-
-        return $fileUrl;
-    }
-
-
 }

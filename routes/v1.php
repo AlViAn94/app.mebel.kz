@@ -30,15 +30,16 @@ Route::middleware('auth:api','tenant')->group(function (){
         Route::resource('clients', '\App\Http\Controllers\v1\Client\ClientController')->only(['create', 'show', 'update']);
 
         // Orders
+        Route::resource('orders', '\App\Http\Controllers\v1\Order\OrderController')->only(['create', 'show', 'update', 'destroy']);
+
         Route::prefix('orders')->group(function () {
             Route::get('type', [\App\Http\Controllers\v1\Order\OrderTypeController::class, 'actionOrderType']);
             Route::post('list', [\App\Http\Controllers\v1\Order\OrderController::class, 'list']);
             Route::post('list/position', [\App\Http\Controllers\v1\Order\OrderController::class, 'listPosition']);
             Route::get('positions', [\App\Http\Controllers\v1\Order\GetFullPositionController::class, 'actionGetFullPosition']);
+            Route::get('send/{id}', [\App\Http\Controllers\v1\Order\OrderController::class, 'send']);
             Route::get('completed/{id}', [\App\Http\Controllers\v1\Order\OrderController::class, 'completed']);
         });
-
-        Route::resource('orders', '\App\Http\Controllers\v1\Order\OrderController')->only(['create', 'show', 'update', 'destroy']);
 
         // Office jobs
         Route::prefix('office')->group(function () {
@@ -65,6 +66,12 @@ Route::middleware('auth:api','tenant')->group(function (){
             Route::get('users/list', [App\Http\Controllers\v1\Order\Job\Factory\FactoryDirController::class, 'index']);
             Route::post('appoint/user', [App\Http\Controllers\v1\Order\Job\Factory\FactoryDirController::class, 'store']);
         });
+
+        // factory-dir
+
+    Route::prefix('dir')->group(function (){
+
+    });
 
 });// middleware auth:api, tenant
 
