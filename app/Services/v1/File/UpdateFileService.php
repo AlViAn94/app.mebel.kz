@@ -31,11 +31,11 @@ class UpdateFileService
 
         if($model){
             $user = Auth::user();
-            if($model->user_id != $user['id']){
+            if($model['user_id'] != $user['id']){
                 return response()->json(['message' => 'У вас нет прав на это действие!'], 404);
             }
-            $old_link = $model->file;
         }
+        $old_link = $model['file'];
 
         $zipName = Str::random(10) . '.zip';
         $savePath = public_path('downloads/files/' . $db . '/');
