@@ -214,7 +214,7 @@ class Order extends Model
 
     public static function takeOrder($position, $order_id)
     {
-        Order::where($position, $position)->where('id', $order_id)->update([
+        Order::where('id', $order_id)->update([
             $position => 1
         ]);
         return response()->json(['message' => 'Вы взяли заказ.']);
