@@ -34,11 +34,7 @@ class UpdateFileService
             if($model->user_id != $user['id']){
                 return response()->json(['message' => 'У вас нет прав на это действие!'], 404);
             }
-            // путь к старому файлу для удаления
-//            $old_link = $model->file;
-            // Временная пока не подключимся к серверу
-            $old_link = str_replace(env('APP_URL'), public_path(), $model->file);
-            //
+            $old_link = $model->file;
         }
 
         $zipName = Str::random(10) . '.zip';

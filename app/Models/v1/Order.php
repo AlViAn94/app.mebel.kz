@@ -219,4 +219,12 @@ class Order extends Model
         ]);
         return response()->json(['message' => 'Вы взяли заказ.']);
     }
+
+    public static function dropOrder($position, $order_id)
+    {
+        Order::where('id', $order_id)->update([
+            $position => 1
+        ]);
+        return response()->json(['message' => 'Вы взяли заказ.']);
+    }
 }

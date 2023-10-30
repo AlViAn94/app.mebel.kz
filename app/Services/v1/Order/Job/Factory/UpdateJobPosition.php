@@ -6,6 +6,7 @@ use App\Models\v1\Design;
 use App\Models\v1\Job;
 use App\Models\v1\Metring;
 use App\Models\v1\Technologist;
+use App\Models\v1\Order;
 use App\Services\v1\File\DeletedFileService;
 
 class UpdateJobPosition
@@ -26,25 +27,23 @@ class UpdateJobPosition
             case 'metrings':
                 $model = Metring::where('id', $id)->first();
                 if($model){
-                    if($model['file'] != null){
-                        $this->DeletedFileService->deletedFile($position, $id);
-                        return Metring::updateCard($id);
-
-                    }else{
-                        return Metring::updateCard($id);
-                    }
+                        $result = Order::dropOrder($model['order_id'], $position);
+                        if($result){
+                            return Metring::updateCard($id);
+                        }else{
+                            return response()->json(['message' => 'Не удалось отменить.'], 404);
+                        }
                 }
                 break;
 
             case 'design':
                 $model = Design::where('id', $id)->first();
                 if($model){
-                    if($model['file'] != null){
-                        $this->DeletedFileService->deletedFile($position, $id);
-                        return Design::updateCard($id);
-
+                    $result = Order::dropOrder($model['order_id'], $position);
+                    if($result){
+                        return Metring::updateCard($id);
                     }else{
-                        return Design::updateCard($id);
+                        return response()->json(['message' => 'Не удалось отменить.'], 404);
                     }
                 }
                 break;
@@ -52,11 +51,11 @@ class UpdateJobPosition
             case 'technologists':
                 $model = Technologist::where('id', $id)->first();
                 if($model){
-                    if($model['file'] != null){
-                        $this->DeletedFileService->deletedFile($position, $id);
-                        return Technologist::updateCard($id);
+                    $result = Order::dropOrder($model['order_id'], $position);
+                    if($result){
+                        return Metring::updateCard($id);
                     }else{
-                        return Technologist::updateCard($id);
+                        return response()->json(['message' => 'Не удалось отменить.'], 404);
                     }
                 }
                 break;

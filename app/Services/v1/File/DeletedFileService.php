@@ -28,24 +28,21 @@ class DeletedFileService
         if($link->file == null){
             return response()->json(['message' => 'Файл не найден!'], 404);
         }
-        // Временная пока не подключимся к серверу
-        $old_link = str_replace(env('APP_URL'), public_path(), $link->file);
-        //
+
+        // путь к временному файлу
+        $old_link = $link->file;
 
         if (file_exists($old_link)) {
             unlink($old_link);
 
             switch ($dir){
                 case 'metrings':
-
                     $metring = Metring::where('id', $id)->first();
-
                     Metring::where('id', $id)->update([
                         'file' => null,
                         'passed_date' => null,
                         'status' => 1
                     ]);
-
                     Order::where('id', $metring->order_id)->update([
                         $dir => 1
                     ]);
@@ -53,7 +50,6 @@ class DeletedFileService
 
                 case 'design':
                     $design = Design::where('id', $id)->first();
-
                     Design::where('id', $id)->update([
                         'file' => null,
                         'passed_date' => null,
