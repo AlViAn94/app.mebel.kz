@@ -36,7 +36,7 @@ Route::middleware('auth:api','tenant')->group(function (){
             Route::get('type', [\App\Http\Controllers\v1\Order\OrderTypeController::class, 'actionOrderType']);
             Route::post('list', [\App\Http\Controllers\v1\Order\OrderController::class, 'list']);
             Route::post('list/position', [\App\Http\Controllers\v1\Order\OrderController::class, 'listPosition']);
-            Route::get('positions', [\App\Http\Controllers\v1\Order\GetFullPositionController::class, 'actionGetFullPosition']);
+            Route::get('list/cards', [\App\Http\Controllers\v1\Order\GetFullPositionController::class, 'actionGetFullPosition']);
             Route::get('send/{id}', [\App\Http\Controllers\v1\Order\OrderController::class, 'send']);
             Route::get('completed/{id}', [\App\Http\Controllers\v1\Order\OrderController::class, 'completed']);
         });
