@@ -65,7 +65,14 @@ class UpdateFileService
             return $result;
         }else{
             if (file_exists($old_link)) {
-                unlink($old_link);
+                $real_path = realpath($old_link);
+                if ($real_path) {
+                    unlink($real_path);
+                } else {
+                    echo "Не удалось разрешить символическую ссылку.";
+                }
+            } else {
+                echo "Файл не существует.";
             }
             return response()->json(['message' => 'Файл успешно заменён!']);
         }
