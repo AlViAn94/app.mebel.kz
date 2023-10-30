@@ -41,7 +41,7 @@ class UpdateJobPosition
                 if($model){
                     $result = Order::dropOrder($model['order_id'], $position);
                     if($result){
-                        return Metring::updateCard($id);
+                        return Design::updateCard($id);
                     }else{
                         return response()->json(['message' => 'Не удалось отменить.'], 404);
                     }
@@ -53,7 +53,7 @@ class UpdateJobPosition
                 if($model){
                     $result = Order::dropOrder($model['order_id'], $position);
                     if($result){
-                        return Metring::updateCard($id);
+                        return Technologist::updateCard($id);
                     }else{
                         return response()->json(['message' => 'Не удалось отменить.'], 404);
                     }

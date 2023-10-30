@@ -222,9 +222,9 @@ class Order extends Model
 
     public static function dropOrder($order_id, $position)
     {
-        Order::where('id', $order_id)->update([
-            $position => 1
+        $order = Order::where('id', $order_id)->update([
+            $position => 0
         ]);
-        return response()->json(['message' => 'Вы взяли заказ.']);
+        return $order;
     }
 }
