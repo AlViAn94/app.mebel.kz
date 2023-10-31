@@ -136,6 +136,7 @@ class User extends Authenticatable implements JWTSubject
             'technologists',
             'admin',
             'foreman',
+            'salary',
             'super_admin',
         ];
         $data = [];
