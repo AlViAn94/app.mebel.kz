@@ -83,6 +83,8 @@ class User extends Authenticatable implements JWTSubject
             $sort = 'created_at';
         }
 
+        $firstItemNumber = ($page - 1) * $page + 1;
+
         $column = [
             'id',
             'iin',
@@ -100,7 +102,7 @@ class User extends Authenticatable implements JWTSubject
             return response()->json(['message' => 'У вас нет доступа.'], 404);
         }
             $connection = $user['connection_id'];
-            return self::select($column)
+            $users = self::select($column)
                 ->where('status', $status)
                 ->where(function ($query) use ($search) {
                     $query
@@ -110,6 +112,11 @@ class User extends Authenticatable implements JWTSubject
                 ->where('position', '!=', 'admin')
                 ->orderBy($sort, $asc ? 'asc' : 'desc')
                 ->paginate($count, ['*'], 'page', $page);
+
+        foreach ($users as $v) {
+            $v->order_number = $firstItemNumber++;
+        }
+        return $users;
     }
 
     public static function factoryUsersList()
