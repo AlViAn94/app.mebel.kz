@@ -114,7 +114,7 @@ class User extends Authenticatable implements JWTSubject
                 ->paginate($count, ['*'], 'page', $page);
 
         foreach ($users as $v) {
-            $v->order_number = $firstItemNumber++;
+            $v->user_number = $firstItemNumber++;
         }
         return $users;
     }
