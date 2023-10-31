@@ -25,10 +25,7 @@ Route::middleware('auth:api','tenant')->group(function (){
         });
 
         // Clients
-        Route::prefix('clients')->group(function () {
-
-        });
-        Route::resource('clients', '\App\Http\Controllers\v1\Client\ClientController')->only(['create', 'show', 'update']);
+        Route::resource('clients', '\App\Http\Controllers\v1\Client\ClientController');
 
         // Orders
         Route::resource('orders', '\App\Http\Controllers\v1\Order\OrderController')->only(['create', 'show', 'update', 'destroy']);
@@ -63,7 +60,7 @@ Route::middleware('auth:api','tenant')->group(function (){
             Route::resource('card', '\App\Http\Controllers\v1\Order\Job\Factory\FactoryCardController');
             Route::post('submitted/order', [App\Http\Controllers\v1\Order\Job\SubmittedOrderController::class, 'submittedOrder']);
             Route::post('cancel/order', [App\Http\Controllers\v1\Order\Job\CancelOrderController::class, 'store']);
-            Route::resource('position', '\App\Http\Controllers\v1\Order\Job\Factory\FactoryTypeController');
+            Route::get('position', [App\Http\Controllers\v1\Order\Job\Factory\FactoryTypeController::class, 'index']);
             Route::get('users/list', [App\Http\Controllers\v1\Order\Job\Factory\FactoryDirController::class, 'index']);
             Route::post('appoint/user', [App\Http\Controllers\v1\Order\Job\Factory\FactoryDirController::class, 'store']);
         });

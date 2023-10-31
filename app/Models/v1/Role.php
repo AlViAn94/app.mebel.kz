@@ -65,7 +65,7 @@ class Role extends Model
         return response()->json(['message' => 'Позиция не добавлена.'], 404);
     }
 
-    public static function deletedPositionUser($id)
+    public static function deleteePositionUser($id)
     {
         $user = Auth::user();
         $roles = Role::getPositions($user['id']);

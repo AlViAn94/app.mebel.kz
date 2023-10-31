@@ -17,4 +17,28 @@ class PositionsType extends Model
         'position',
         'name'
     ];
+
+    public static function getPosition($data)
+    {
+        $position = $data['type'];
+
+        switch ($position){
+            case 'factory':
+
+            $filter = [
+                'manager',
+                'design',
+                'metrings',
+                'technologists',
+                'admin',
+                'super_admin',
+                'foreman',
+            ];
+                return self::whereNotIn('position', $filter)->get()->toArray();
+
+            default:
+                return self::get();
+        }
+
+    }
 }

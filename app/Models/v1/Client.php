@@ -4,6 +4,7 @@ namespace App\Models\v1;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
 class Client extends Model
@@ -70,5 +71,57 @@ class Client extends Model
         } else {
             return response()->json(["message" => "Клиент не найден!"], 404);
         }
+    }
+
+    public static function getList($request)
+    {
+        $search = $request['search'];
+        $sort = $request['sort'];
+        $asc = $request['asc'];
+        $page = $request['page'];
+        $count = $request['count'];
+
+        if (empty($sort)) {
+            $sort = 'created_at';
+        }
+
+        $firstItemNumber = ($page - 1) * $page + 1;
+
+        $user = Auth::user();
+        $user_id = $user['id'];
+        $roles = Role::getPositions($user_id);
+
+        if (!in_array('admin', $roles)) {
+            return response()->json(['message' => 'У вас нет доступа.'], 404);
+        }
+        $users = self::where(function ($query) use ($search) {
+                $query
+                    ->where('name', 'LIKE', "%{$search}%");
+            })
+            ->orderBy($sort, $asc ? 'asc' : 'desc')
+            ->paginate($count, ['*'], 'page', $page);
+
+        foreach ($users as $v) {
+            $v->user_number = $firstItemNumber++;
+        }
+        return $users;
+    }
+
+    public static function deleteClient($id)
+    {
+        $user = Auth::user();
+        $roles = Role::getPositions($user['id']);
+
+        if (!in_array('admin', $roles)) {
+            return response()->json(['message' => 'У вас нет доступа.'], 404);
+        }
+
+        $role = self::find($id);
+
+        if ($role) {
+            $role->delete();
+            return response()->json(['message' => 'Клиент удален.']);
+        }
+        return response()->json(['message' => 'Не удалось удалить клиента.'], 404);
     }
 }
