@@ -81,19 +81,20 @@ class User extends Authenticatable implements JWTSubject
             'position',
             'created_at'
         ];
+
         $user = Auth::user();
-        if($user){
-            if($user['position'] != 'admin'){
-                return response()->json(['message' => 'У вас нет прав на это действие.'], 404);
-            }
+        $user_id = $user['id'];
+        $roles = Role::getPositions($user_id);
+
+        if (!in_array('admin', $roles)) {
+            return response()->json(['message' => 'У вас нет доступа.'], 404);
+        }
             $connection = $user['connection_id'];
             return self::select($column)
                 ->where('connection_id', $connection)
                 ->where('position', '!=', 'admin')
                 ->where('status', $status)
                 ->get();
-        }
-        return response()->json(['message' => 'Что то пошло не так.'], 404);
     }
 
     public static function factoryUsersList()
