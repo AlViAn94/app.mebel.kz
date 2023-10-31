@@ -73,7 +73,7 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return User::updateUser($request, $id);
     }
 
     /**
@@ -84,10 +84,11 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        $admin = Auth::user();
+        $user = Auth::user();
+        $roles = Role::getPositions($user['id']);
 
-        if($admin['position'] != 'admin'){
-            return response()->json(['message' => 'У вас нет прав на это действие.'], 404);
+        if (!in_array('admin', $roles)) {
+            return response()->json(['message' => 'У вас нет доступа.'], 404);
         }
 
         $user = User::find($id);

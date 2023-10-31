@@ -239,4 +239,34 @@ class Order extends Model
         ]);
         return $order;
     }
+
+    public static function getList($data)
+    {
+        $search = $data['search'];
+        $status = $data['status'];
+        $sort = $data['sort'];
+        $asc = $data['asc'];
+        $count = $data['count'];
+        $page = $data['page'];
+
+        if (empty($sort)) {
+            $sort = 'created_at';
+        }
+        $firstItemNumber = ($page - 1) * $page + 1;
+
+        $orders = Order::where('status', $status)
+            ->where(function ($query) use ($search) {
+                $query->where('order_num', 'LIKE', "%{$search}%");
+            })
+            ->orderBy($sort, $asc ? 'asc' : 'desc')
+            ->paginate($count, ['*'], 'page', $page);
+
+        foreach ($orders as $v) {
+            $v->order_number = $firstItemNumber++;
+            $client = Client::where('id', $v['client_id'])->first();
+            $full_name = $client['name'] . ' ' . $client['surname'] . ' ' . $client['lastname'];
+            $v->full_name = $full_name;
+        }
+        return $orders;
+    }
 }

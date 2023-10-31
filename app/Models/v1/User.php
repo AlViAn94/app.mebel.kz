@@ -177,4 +177,23 @@ class User extends Authenticatable implements JWTSubject
 
         return $user;
     }
+
+    public static function updateUser($data, $id)
+    {
+        $order = self::find($id);
+
+        if ($order) {
+            $order->update([
+                'iin' => $data['iin'],
+                'email' => $data['email'],
+                'name' => $data['name'],
+                'address' => $data['address'],
+                'phone' => $data['phone']
+            ]);
+
+            return response()->json(["message" => "Данные работника успешно обновлены."]);
+        } else {
+            return response()->json(["message" => "Не верные данные."], 404);
+        }
+    }
 }

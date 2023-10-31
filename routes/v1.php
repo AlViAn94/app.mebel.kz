@@ -22,6 +22,7 @@ Route::middleware('auth:api','tenant')->group(function (){
         Route::prefix('admin')->group(function (){
            Route::resource('users', '\App\Http\Controllers\v1\Admin\UsersController');
            Route::resource('positions', '\App\Http\Controllers\v1\Admin\UserPositionController');
+           Route::get('orders', [App\Http\Controllers\v1\Admin\AdminOrdersController::class, 'list']);
         });
 
         // Clients
