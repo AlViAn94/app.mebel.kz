@@ -21,6 +21,7 @@ Route::middleware('auth:api','tenant')->group(function (){
         // Admin
         Route::prefix('admin')->group(function (){
            Route::resource('users', '\App\Http\Controllers\v1\Admin\UsersController');
+           Route::resource('positions', '\App\Http\Controllers\v1\Admin\UserPositionController');
         });
 
         // Clients

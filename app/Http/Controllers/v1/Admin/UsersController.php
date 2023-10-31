@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\v1\Role;
 use App\Models\v1\User;
 use App\Services\v1\Admin\StoreUsersService;
 use Illuminate\Http\Request;
@@ -23,9 +24,9 @@ class UsersController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function create()
+    public function create(Request $request)
     {
         //
     }
@@ -49,7 +50,7 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        //
+        return User::getUser($id);
     }
 
     /**

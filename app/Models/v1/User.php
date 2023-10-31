@@ -158,4 +158,22 @@ class User extends Authenticatable implements JWTSubject
         }
         return $data;
     }
+
+    public static function getUser($id)
+    {
+        $user = Auth::user();
+        $roles = Role::getPositions($user['id']);
+
+        if (!in_array('admin', $roles)) {
+            return response()->json(['message' => 'У вас нет доступа.'], 404);
+        }
+
+        $user = self::whereId($id)->first();
+
+        $roles = Role::where('user_id', $id)->get()->toArray();
+
+        $user['positions'] = $roles;
+
+        return $user;
+    }
 }
