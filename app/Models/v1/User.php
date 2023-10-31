@@ -114,6 +114,8 @@ class User extends Authenticatable implements JWTSubject
                 ->paginate($count, ['*'], 'page', $page);
 
         foreach ($users as $v) {
+            $role = Role::where('user_id', $v['id'])->pluck('role')->toArray();
+            $v->role = $role;
             $v->user_number = $firstItemNumber++;
         }
         return $users;
