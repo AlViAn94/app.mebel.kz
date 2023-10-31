@@ -73,6 +73,16 @@ class User extends Authenticatable implements JWTSubject
     public static function list($request)
     {
         $status = $request['status'];
+        $search = $request['search'];
+        $sort = $request['sort'];
+        $asc = $request['asc'];
+        $page = $request['page'];
+        $count = $request['count'];
+
+        if (empty($sort)) {
+            $sort = 'created_at';
+        }
+
         $column = [
             'id',
             'iin',
@@ -91,10 +101,15 @@ class User extends Authenticatable implements JWTSubject
         }
             $connection = $user['connection_id'];
             return self::select($column)
+                ->where('status', $status)
+                ->where(function ($query) use ($search) {
+                    $query
+                        ->where('name', 'LIKE', "%{$search}%");
+                })
                 ->where('connection_id', $connection)
                 ->where('position', '!=', 'admin')
-                ->where('status', $status)
-                ->get();
+                ->orderBy($sort, $asc ? 'asc' : 'desc')
+                ->paginate($count, ['*'], 'page', $page);
     }
 
     public static function factoryUsersList()
