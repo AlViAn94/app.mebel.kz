@@ -185,7 +185,8 @@ class User extends Authenticatable implements JWTSubject
                 'email' => $data['email'],
                 'name' => $data['name'],
                 'address' => $data['address'],
-                'phone' => $data['phone']
+                'phone' => $data['phone'],
+                'salary' => $data['salary']
             ]);
 
             return response()->json(["message" => "Данные работника успешно обновлены."]);
