@@ -186,7 +186,6 @@ class User extends Authenticatable implements JWTSubject
                 'name' => $data['name'],
                 'address' => $data['address'],
                 'phone' => $data['phone'],
-                'position' => $data['position'],
                 'salary' => $data['salary']
             ]);
 
