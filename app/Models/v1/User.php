@@ -21,13 +21,13 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = [
         'iin',
         'name',
-        'email',
         'address',
         'password',
         'position',
         'status',
         'phone',
         'salary',
+        'email',
         'connection_id'
     ];
 
@@ -37,7 +37,6 @@ class User extends Authenticatable implements JWTSubject
      * @var array<int, string>
      */
     protected $hidden = [
-        'email',
         'password',
     ];
 
@@ -168,11 +167,9 @@ class User extends Authenticatable implements JWTSubject
         if (!in_array('admin', $roles)) {
             return response()->json(['message' => 'У вас нет доступа.'], 404);
         }
-
+        $result = [];
         $user = self::whereId($id)->first();
-
         $roles = Role::where('user_id', $id)->get()->toArray();
-
         $user['positions'] = $roles;
 
         return $user;
