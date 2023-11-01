@@ -194,4 +194,24 @@ class User extends Authenticatable implements JWTSubject
             return response()->json(["message" => "Не верные данные."], 404);
         }
     }
+
+    public static function dropPassword($id)
+    {
+        $user = Auth::user();
+        $roles = Role::getPositions($user['id']);
+
+        if (!in_array('admin', $roles)) {
+            return response()->json(['message' => 'У вас нет доступа.'], 404);
+        }
+
+        $result = self::whereId($id)->update([
+            'password' => null,
+            'status' => 3
+        ]);
+
+        if(!$result){
+            return response()->json(['message' => 'Не верный запрос.'], 404);
+        }
+        return response()->json(['message' => 'Пароль сброшен.']);
+    }
 }

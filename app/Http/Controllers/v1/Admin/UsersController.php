@@ -61,7 +61,7 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
-        //
+        return User::dropPassword($id);
     }
 
     /**
