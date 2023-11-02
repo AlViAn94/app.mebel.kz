@@ -286,12 +286,9 @@ class Order extends Model
         foreach ($orders as $order) {
             $date_time = self::getDateEndAttribute($order['date_end']);
             $day = $date_time->format('d');
-            if(!isset($ordersByDay[$day])){
+
                 $ordersByDay[$day][$i] = $order;
                 $i++;
-            }
-            $ordersByDay[$day][$i] = $order;
-            $i++;
         }
         return $ordersByDay;
     }
