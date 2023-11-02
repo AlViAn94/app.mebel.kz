@@ -31,13 +31,14 @@ Route::middleware('auth:api','tenant')->group(function (){
         // Orders
         Route::resource('orders', '\App\Http\Controllers\v1\Order\OrderController')->only(['create', 'show', 'update', 'destroy']);
 
-        Route::prefix('orders')->group(function () {
+        Route::prefix('order')->group(function () {
             Route::get('type', [\App\Http\Controllers\v1\Order\OrderTypeController::class, 'actionOrderType']);
             Route::post('list', [\App\Http\Controllers\v1\Order\OrderController::class, 'list']);
             Route::post('list/position', [\App\Http\Controllers\v1\Order\OrderController::class, 'listPosition']);
             Route::get('list/cards', [\App\Http\Controllers\v1\Order\GetFullPositionController::class, 'actionGetFullPosition']);
             Route::get('send/{id}', [\App\Http\Controllers\v1\Order\OrderController::class, 'send']);
             Route::get('completed/{id}', [\App\Http\Controllers\v1\Order\OrderController::class, 'completed']);
+            Route::get('calendar', [\App\Http\Controllers\v1\Order\OrderCalendarController::class, 'calendar']);
         });
 
         // Office jobs

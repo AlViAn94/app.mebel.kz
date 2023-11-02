@@ -2,6 +2,7 @@
 
 namespace App\Models\v1;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -268,5 +269,26 @@ class Order extends Model
             $v->full_name = $full_name;
         }
         return $orders;
+    }
+    public static function getDateEndAttribute($value)
+    {
+        return Carbon::parse($value);
+    }
+    public static function calendar($data)
+    {
+        $month = $data['date'];
+        $orders = Order::whereYear('date_end', '=', date('Y', strtotime($month)))
+            ->whereMonth('date_end', '=', date('m', strtotime($month)))
+            ->get()
+            ->toArray();
+        $ordersByDay = [];
+        $i = 0;
+        foreach ($orders as $order) {
+            $date_time = self::getDateEndAttribute($order['date_end']);
+            $day = $date_time->format('d');
+            $ordersByDay[$day][$i] = $order;
+            $i++;
+        }
+        return $ordersByDay;
     }
 }
