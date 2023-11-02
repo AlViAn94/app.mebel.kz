@@ -2,6 +2,7 @@
 
 namespace App\Models\v1;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -123,5 +124,31 @@ class Client extends Model
             return response()->json(['message' => 'Клиент удален.']);
         }
         return response()->json(['message' => 'Не удалось удалить клиента.'], 404);
+    }
+    public static function getDateEndAttribute($value)
+    {
+        return Carbon::parse($value);
+    }
+    public static function getNewClients($data)
+    {
+        $year = $data['year'];
+        $month = $data['month'];
+        if(isset($month)){
+            $date = $year . '-' . $month;
+            $date_time = self::getDateEndAttribute($date);
+            $day = $date_time->format('Y-m');
+        }else{
+            $date = $year;
+            $date_time = self::getDateEndAttribute($date);
+            $day = $date_time->format('Y');
+        }
+        $result = self::whereDate('created_at', 'like', $day . '%')
+            ->count('id');
+
+        if(!$result){
+            $result = [];
+            return $result;
+        }
+        return $result;
     }
 }

@@ -292,4 +292,52 @@ class Order extends Model
         }
         return $ordersByDay;
     }
+
+    public static function getStatisticSum($data)
+    {
+        $year = $data['year'];
+        $month = $data['month'];
+        if(isset($month)){
+            $date = $year . '-' . $month;
+            $date_time = self::getDateEndAttribute($date);
+            $day = $date_time->format('Y-m');
+        }else{
+            $date = $year;
+            $date_time = self::getDateEndAttribute($date);
+            $day = $date_time->format('Y');
+        }
+        $result = self::whereDate('created_at', 'like', $day . '%')
+            ->sum('sum');
+
+        if(!$result){
+            $result = [];
+            return $result;
+        }
+        return $result;
+
+    }
+
+    public static function getStatisticCount($data)
+    {
+        $year = $data['year'];
+        $month = $data['month'];
+        if(isset($month)){
+            $date = $year . '-' . $month;
+            $date_time = self::getDateEndAttribute($date);
+            $day = $date_time->format('Y-m');
+        }else{
+            $date = $year;
+            $date_time = self::getDateEndAttribute($date);
+            $day = $date_time->format('Y');
+        }
+        $result = self::whereDate('created_at', 'like', $day . '%')
+            ->count('id');
+
+        if(!$result){
+            $result = [];
+            return $result;
+        }
+        return $result;
+
+    }
 }

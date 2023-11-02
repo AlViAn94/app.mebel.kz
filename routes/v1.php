@@ -41,6 +41,11 @@ Route::middleware('auth:api','tenant')->group(function (){
             Route::get('calendar', [\App\Http\Controllers\v1\Order\OrderCalendarController::class, 'calendar']);
         });
 
+        // Statistic
+        Route::prefix('statistic')->group(function () {
+            Route::get('mix', [\App\Http\Controllers\v1\Statistics\StatisticController::class, 'statisticMix']);
+        });
+
         // Office jobs
         Route::prefix('office')->group(function () {
             Route::post('take/order', [\App\Http\Controllers\v1\Order\Job\TakeOrderController::class, 'takeOrder']);

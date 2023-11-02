@@ -215,4 +215,29 @@ class User extends Authenticatable implements JWTSubject
         }
         return response()->json(['message' => 'Пароль сброшен.']);
     }
+
+    public static function getStatisticSalary()
+    {
+        $filter = [
+            'dir',
+            'admin',
+        ];
+
+        $user = Auth::user();
+        $roles = Role::getPositions($user['id']);
+        $connection = $user['connection_id'];
+        if (!in_array('dir', $roles)) {
+            return response()->json(['message' => 'У вас нет доступа.'], 404);
+        }
+        $result = self::whereNotIn('position', $filter)
+            ->where('status', 1)
+            ->where('connection_id', $connection)
+            ->sum('salary');
+
+        if(!$result){
+            $result = [];
+            return $result;
+        }
+        return $result;
+    }
 }
