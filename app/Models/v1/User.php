@@ -145,9 +145,10 @@ class User extends Authenticatable implements JWTSubject
         foreach ($role as $item) {
             $results = self::where('id', $item['user_id'])
                 ->where('connection_id', $connection)
-                ->first()->toArray();
-            $results['position'] = $item['role'];
+                ->first();
+
             if($results != null){
+                $results['position'] = $item['role'];
                 $data[$i] = $results;
                 $i++;
             }
