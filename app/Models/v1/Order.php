@@ -282,10 +282,14 @@ class Order extends Model
             ->get()
             ->toArray();
         $ordersByDay = [];
-        $i = 0;
+        $i = 1;
         foreach ($orders as $order) {
             $date_time = self::getDateEndAttribute($order['date_end']);
             $day = $date_time->format('d');
+            if(!isset($ordersByDay[$day])){
+                $ordersByDay[$day][$i] = $order;
+                $i++;
+            }
             $ordersByDay[$day][$i] = $order;
             $i++;
         }
