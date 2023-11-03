@@ -13,7 +13,7 @@ class RegmyController extends Controller
         $action = 'entrance';
         $file = $request->file('file');
         $fileName = $file->getClientOriginalName();
-        return Regmy::regMyImportPhoto($file, $fileName, $action);
+        return Regmy::regMyImportPhoto($request, $fileName, $action);
     }
 
     public function exit(PhotoRequest $request)
@@ -21,6 +21,6 @@ class RegmyController extends Controller
         $action = 'exit';
         $file = $request->file('file');
         $fileName = $file->getClientOriginalName();
-        return Regmy::regMyImportPhoto($file, $fileName, $action);
+        return Regmy::regMyImportPhoto($request, $fileName, $action);
     }
 }
