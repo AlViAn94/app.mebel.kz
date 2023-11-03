@@ -30,6 +30,16 @@ class Regmy extends Model
 
         $date = Carbon::now();
         $date_time = $date->format('Y-m-d_H:m:s');
+        $date_add = $date->format('Y-m-d');
+
+        $existingRecord = self::where('user_id', $user_id)
+            ->where('action', $action)
+            ->where('created_at', 'LIKE', '%' . $date_add . '%')
+            ->get();
+
+        if ($existingRecord->count() > 0) {
+            return response()->json(['message' => 'Вы уже зарегистрировались.'], 404);
+        }
 
         if (!File::isDirectory($directoryPath)) {
             File::makeDirectory($directoryPath, 0755, true, true);
