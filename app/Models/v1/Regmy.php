@@ -72,10 +72,10 @@ class Regmy extends Model
             }
         }
         if($action == 'entrance'){
-            return response()->json(['message' => 'Добро пожаловать.']);
+            return response()->json(['action' => 'entrance']);
 
         }else{
-            return response()->json(['message' => 'До свиданья.']);
+            return response()->json(['action' => 'exit']);
         }
     }
 
