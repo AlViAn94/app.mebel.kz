@@ -26,7 +26,7 @@ class Regmy extends Model
         $user_id = $user['id'];
         $filePath = public_path('downloads/files/regmy/' . $fileName);
         file_put_contents($filePath, $file);
-        $fileLink = env('APP_URL') . ('downloads/files/regmy/' . $fileName);
+        $fileLink = env('APP_URL') . ('/downloads/files/regmy/' . $fileName);
         if(fileExists($filePath))
         {
             $result = self::insert([
