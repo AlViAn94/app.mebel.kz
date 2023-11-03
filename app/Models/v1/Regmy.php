@@ -25,14 +25,14 @@ class Regmy extends Model
     public static function regMyImportPhoto($file)
     {
         $user = Auth::user();
-        $user_id = $user['id'];
+
         $directoryPath = public_path('downloads/files/regmy');
 
         $date = Carbon::now();
         $date_time = $date->format('Y-m-d_H:m:s');
         $date_add = $date->format('Y-m-d');
 
-        $existingRecord = self::where('user_id', $user_id)
+        $existingRecord = self::where('user_id', $user['id'])
             ->where('created_at', 'LIKE', '%' . $date_add . '%')
             ->count();
         switch ($existingRecord){
@@ -60,8 +60,9 @@ class Regmy extends Model
 
         if (File::exists($filePath)) {
             $result = self::insert([
-                'user_id' => $user_id,
+                'user_id' => $user['id'],
                 'action' => $action,
+                'name' => $user['name'],
                 'file' => $fileLink
             ]);
 
@@ -81,9 +82,20 @@ class Regmy extends Model
     public static function getList($data)
     {
         $period = $data['period'];
+        $action = $data['action'];
+        $search = $data['search'];
+        $sort = $data['sort'];
+        $asc = $data['asc'];
+        $count = $data['count'];
+        $page = $data['page'];
+
+        if (empty($sort)) {
+            $sort = 'created_at';
+        }
+
+        $firstItemNumber = ($page - 1) * $page + 1;
 
         $date = Carbon::now();
-
 
         switch ($period){
             case 'day':
@@ -99,14 +111,21 @@ class Regmy extends Model
                 break;
         }
 
-        $existingRecord = self::where('created_at', 'LIKE', '%' . $currentDate . '%')
-            ->get();
+        $query = self::where('created_at', 'LIKE', '%' . $currentDate . '%')
+            ->where(function ($query) use ($search) {
+                $query->where('name', 'LIKE', "%{$search}%");
+            });
+
+        if ($action !== null) {
+            $query->where('action', $action);
+        }
+
+        $existingRecord = $query
+            ->orderBy($sort, $asc ? 'asc' : 'desc')
+            ->paginate($count, ['*'], 'page', $page);
 
         foreach ($existingRecord as $item) {
-            $user = User::where('id', $item['user_id'])->first();
-            $item->name = $user['name'];
-            $item->position = $user['position'];
-            $item->iin = $user['iin'];
+            $item->order_number = $firstItemNumber++;
         }
         return $existingRecord;
     }

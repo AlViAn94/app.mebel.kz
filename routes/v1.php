@@ -44,7 +44,7 @@ Route::middleware('auth:api','tenant')->group(function (){
         // RegMy
         Route::prefix('regmy')->group(function () {
             Route::post('registration', [\App\Http\Controllers\v1\Regmy\RegmyController::class, 'reg']);
-            Route::get('list', [\App\Http\Controllers\v1\Regmy\RegmyController::class, 'list']);
+            Route::post('list', [\App\Http\Controllers\v1\Regmy\RegmyController::class, 'list']);
         });
         // Statistic
         Route::prefix('statistic')->group(function () {
