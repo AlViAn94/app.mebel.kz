@@ -8,19 +8,15 @@ use App\Models\v1\Regmy;
 
 class RegmyController extends Controller
 {
-    public function entrance(PhotoRequest $request)
+    public function reg(PhotoRequest $request)
     {
-        $action = 'entrance';
         $file = $request->file('file');
         $file->isValid();
-        return Regmy::regMyImportPhoto($file, $action);
+        return Regmy::regMyImportPhoto($file);
     }
 
-    public function exit(PhotoRequest $request)
+    public function list(PhotoRequest $request)
     {
-        $action = 'exit';
-        $file = $request->file('file');
-        $file->isValid();
-        return Regmy::regMyImportPhoto($file, $action);
+        return Regmy::getList($request->all());
     }
 }

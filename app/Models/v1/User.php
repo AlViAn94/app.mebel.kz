@@ -240,4 +240,16 @@ class User extends Authenticatable implements JWTSubject
         }
         return $result;
     }
+
+    public static function getUserListFio($array)
+    {
+        $users = [];
+        $i = 0;
+        foreach ($array as $item)
+        {
+            $users[$i] = self::where('id', $item['user_id'])->first();
+            $i++;
+        }
+        return $users;
+    }
 }
