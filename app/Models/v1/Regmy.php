@@ -145,6 +145,6 @@ class Regmy extends Model
             default:
                 $result = 'Зарегистрируйте вход';
         }
-        return response()->json(['date_exit' => $result]);
+        return response()->json(['message' => $result]);
     }
 }
