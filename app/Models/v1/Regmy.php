@@ -2,11 +2,13 @@
 
 namespace App\Models\v1;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
-use function PHPUnit\Framework\fileExists;
+use Illuminate\Support\Facades\File;
+use Illuminate\Http\UploadedFile;
 
 class Regmy extends Model
 {
@@ -20,22 +22,36 @@ class Regmy extends Model
         'file'
     ];
 
-    public static function regMyImportPhoto($file, $fileName, $action)
+    public static function regMyImportPhoto($file, $action)
     {
         $user = Auth::user();
         $user_id = $user['id'];
-        $filePath = public_path('downloads/files/regmy/' . $fileName);
-        file_put_contents($filePath, $file);
+        $directoryPath = public_path('downloads/files/regmy');
+
+        $date = Carbon::now();
+        $date_time = $date->format('Y-m-d_H:m:s');
+
+        if (!File::isDirectory($directoryPath)) {
+            File::makeDirectory($directoryPath, 0755, true, true);
+        }
+
+        $extension = $file->getClientOriginalExtension();
+
+        $fileName = $user['iin'] . '_' . $date_time . '.' . $extension;
+        $filePath = $directoryPath . '/' . $fileName;
+
+        File::put($filePath, file_get_contents($file));
         $fileLink = env('APP_URL') . ('/downloads/files/regmy/' . $fileName);
-        if(fileExists($filePath))
-        {
+
+        if (File::exists($filePath)) {
             $result = self::insert([
                 'user_id' => $user_id,
                 'action' => $action,
                 'file' => $fileLink
             ]);
-            if(!$result){
-                unlink($filePath);
+
+            if (!$result) {
+                File::delete($filePath);
                 return response()->json(['message' => 'Не верный запрос.'], 404);
             }
         }
