@@ -16,6 +16,11 @@ class RegmyController extends Controller
         return Regmy::regMyImportPhoto($file);
     }
 
+    public function checkReg()
+    {
+        return Regmy::checkAction();
+    }
+
     public function list(Request $request)
     {
         return Regmy::getList($request->all());
