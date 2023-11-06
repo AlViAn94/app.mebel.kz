@@ -43,43 +43,46 @@ class Regmy extends Model
         File::put($filePath, file_get_contents($file));
         $fileLink = env('APP_URL') . ('/downloads/files/regmy/' . $fileName);
 
-        $existingRecord = self::where('user_id', $user['id'])
-            ->where('created_at', 'LIKE', '%' . $date_add . '%')
-            ->count();
+
 
         if (File::exists($filePath)) {
-            switch ($existingRecord){
-                case 0:
-                        $result = self::insert([
-                            'user_id' => $user['id'],
-                            'name' => $user['name'],
-                            'entrance_time' => $date_time,
-                            'entrance_file' => $fileLink
+            $existingRecord = self::where('user_id', $user['id'])
+                ->where('created_at', 'LIKE', '%' . $date_add . '%')
+                ->first();
+            if($existingRecord){
+                if($existingRecord['exit_time'] != null){
+                    return response()->json(['message' => 'Вы уже зарегистрировали вход и выход за сегодня.'], 404);
+                }else{
+                    $result = self::where('user_id', $user['id'])
+                        ->where('entrance_time', $existingRecord['entrance_time'])
+                        ->update([
+                            'exit_time' => $date,
+                            'exit_file' => $fileLink
                         ]);
                     if (!$result) {
                         File::delete($filePath);
                         return response()->json(['message' => 'Не верный запрос.'], 404);
                     }
-                    return response()->json(['action' => 'entrance']);
-                case 1:
-                    $reg = self::where('user_id', $user['id'])->where('created_at', 'LIKE', '%' . $date_add . '%')->first();
-                    if($reg['exit_time'] == null){
-                        $result = self::where('user_id', $user['id'])
-                            ->where('entrance_time', 'LIKE', '%' . $date_add . '%')
-                            ->update([
-                                'exit_time' => $date_time,
-                                'exit_file' => $fileLink
-                            ]);
-                        if (!$result) {
-                            File::delete($filePath);
-                            return response()->json(['message' => 'Не верный запрос.'], 404);
-                        }
-                        return response()->json(['action' => 'exit']);
+                }
+                    return response()->json(['action' => 'exit']);
+            }else{
+                $result = self::insert([
+                    'user_id' => $user['id'],
+                    'name' => $user['name'],
+                    'entrance_time' => $date,
+                    'entrance_file' => $fileLink
+                ]);
+                    if (!$result) {
+                        File::delete($filePath);
+                        return response()->json(['message' => 'Не верный запрос.'], 404);
                     }
-                    return response()->json(['message' => 'Вы уже зарегистрировали вход и выход за сегодня.'], 404);
+                return response()->json(['action' => 'entrance']);
             }
         }
         return response()->json(['message' => 'Не верный запрос.'], 404);
+
+
+
     }
 
     public static function getList($data)
