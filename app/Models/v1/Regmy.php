@@ -62,18 +62,20 @@ class Regmy extends Model
                     }
                     return response()->json(['action' => 'entrance']);
                 case 1:
-                    $result = self::where('user_id', $user['id'])
-                        ->where('entrance_time', 'LIKE', '%' . $date_add . '%')
-                        ->update([
-                        'exit_time' => $date_time,
-                        'exit_file' => $fileLink
-                    ]);
-                    if (!$result) {
-                        File::delete($filePath);
-                        return response()->json(['message' => 'Не верный запрос.'], 404);
+                    $reg = self::where('user_id', $user['id'])->where('created_at', 'LIKE', '%' . $date_add . '%')->first();
+                    if($reg['exit_time'] == null){
+                        $result = self::where('user_id', $user['id'])
+                            ->where('entrance_time', 'LIKE', '%' . $date_add . '%')
+                            ->update([
+                                'exit_time' => $date_time,
+                                'exit_file' => $fileLink
+                            ]);
+                        if (!$result) {
+                            File::delete($filePath);
+                            return response()->json(['message' => 'Не верный запрос.'], 404);
+                        }
+                        return response()->json(['action' => 'exit']);
                     }
-                    return response()->json(['action' => 'exit']);
-                default:
                     return response()->json(['message' => 'Вы уже зарегистрировали вход и выход за сегодня.'], 404);
             }
         }
