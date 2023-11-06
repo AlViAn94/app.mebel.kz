@@ -133,16 +133,17 @@ class Regmy extends Model
         $date = Carbon::now();
         $currentDate = $date->format('Y-m-d');
         $user = Auth::user();
-        $result = self::where('user_id', $user['id'])->where('created_at', 'LIKE', '%' . $currentDate . '%')->get()->toArray();
+        $result = self::where('user_id', $user['id'])->where('created_at', 'LIKE', '%' . $currentDate . '%')->first();
 
-        switch (count($result)){
-            case 1:
-                return response()->json(['date_entrance' => $result[0]['created_at']]);
-            case 2:
-                return response()->json(['date_exit' => $result[1]['created_at']]);
-            default:
-                $result = 'Зарегистрируйте вход';
+        if($result){
+            if($result['exit_time'] != null){
+                return response()->json(['date_exit' => $result['exit_time']]);
+            }
+            if($result['entrance_time'] != null){
+                return response()->json(['date_entrance' => $result['entrance_time']]);
+            }
+            return response()->json(['message' => $result]);
         }
-        return response()->json(['message' => $result]);
+        return response()->json(['message' => 'Зарегистрируйте вход.']);
     }
 }
