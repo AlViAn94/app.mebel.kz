@@ -104,6 +104,7 @@ class Client extends Model
 
         foreach ($users as $v) {
             $v->user_number = $firstItemNumber++;
+            $v->fulname = $v['surname'] . ' ' . $v['name'] . ' ' . $v['lastname'];
         }
         return $users;
     }
