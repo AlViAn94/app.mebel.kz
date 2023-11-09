@@ -88,6 +88,7 @@ class User extends Authenticatable implements JWTSubject
             'id',
             'iin',
             'name',
+            'email',
             'phone',
             'position',
             'created_at'
@@ -157,6 +158,7 @@ class User extends Authenticatable implements JWTSubject
         if(!$data){
             return response()->json(['message' => 'Не верные данные'], 404);
         }
+        dd($data);
         return $data;
     }
 
