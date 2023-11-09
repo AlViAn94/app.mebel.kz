@@ -6,12 +6,22 @@ use App\Models\v1\Connection;
 use App\Models\v1\Design;
 use App\Models\v1\Metring;
 use App\Models\v1\Order;
+use App\Models\v1\Role;
 use App\Models\v1\Technologist;
+use Illuminate\Support\Facades\Auth;
 
 class DeletedFileService
 {
     public function deletedFile($dir, $id)
     {
+        $user = Auth::user();
+        $user_id = $user['id'];
+        $roles = Role::getPositions($user_id);
+
+        if (!in_array($dir, $roles)) {
+            return response()->json(['message' => 'Только начальник цеха может удалить карту.'], 404);
+        }
+
         switch ($dir){
             case 'metrings':
                 $link = Metring::where('id', $id)->select('file')->first();

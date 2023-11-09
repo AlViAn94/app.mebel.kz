@@ -3,13 +3,11 @@
 namespace App\Http\Controllers\v1\File;
 
 use App\Http\Controllers\Controller;
-use App\Models\v1\Role;
 use App\Services\v1\File\DeletedFileService;
 use App\Services\v1\File\DownloadFileService;
 use App\Services\v1\File\SaveFileService;
 use App\Services\v1\File\UpdateFileService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
 class FileController extends Controller
@@ -44,17 +42,6 @@ class FileController extends Controller
 
     public function update(Request $request, UpdateFileService $service)
     {
-        $dir = $request->input('dir');
-        $id = $request->input('id');
-
-        $user = Auth::user();
-        $user_id = $user['id'];
-        $roles = Role::getPositions($user_id);
-
-        if (!in_array($dir, $roles)) {
-            return response()->json(['message' => 'Только начальник цеха может удалить карту.'], 404);
-        }
-
         $files = [];
         $index = 0;
         // Получите файлы и другие параметры
@@ -63,7 +50,8 @@ class FileController extends Controller
             $files[$fileKey] = $request->file($fileKey);
             $index++;
         }
-
+        $dir = $request->input('dir');
+        $id = $request->input('id');
 
         // Ваш код обработки файлов и параметров
         $result = $service->updateFiles($files, $dir, $id);
