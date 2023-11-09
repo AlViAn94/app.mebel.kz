@@ -92,7 +92,7 @@ class Client extends Model
         $user_id = $user['id'];
         $roles = Role::getPositions($user_id);
 
-        if (!in_array('admin', $roles)) {
+        if (!in_array('dir', $roles)) {
             return response()->json(['message' => 'У вас нет доступа.'], 404);
         }
         $users = self::where(function ($query) use ($search) {

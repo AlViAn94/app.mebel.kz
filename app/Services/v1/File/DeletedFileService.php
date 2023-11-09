@@ -19,7 +19,7 @@ class DeletedFileService
         $roles = Role::getPositions($user_id);
 
         if (!in_array($dir, $roles)) {
-            return response()->json(['message' => 'Только начальник цеха может удалить карту.'], 404);
+            return response()->json(['message' => 'У вас нет прав на это действие.'], 404);
         }
 
         switch ($dir){
