@@ -306,13 +306,13 @@ class Order extends Model
 
             switch ($order['status']){
                 case 0:
-                    $color = 'gray';
-                    break;
-                case 1:
                     $color = 'blue';
                     break;
-                case 2:
+                case 1:
                     $color = 'yellow';
+                    break;
+                case 2:
+                    $color = 'braun';
                     break;
                 case 3:
                     $color = 'green';
