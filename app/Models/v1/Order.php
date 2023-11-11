@@ -279,15 +279,27 @@ class Order extends Model
         $start = Carbon::parse($data['date_start'])->startOfDay();
         $end = Carbon::parse($data['date_end'])->endOfDay();
 
-        $orders_created = Order::whereBetween('created_at', [$start, $end])->get(['id'])->toArray();
-        $orders_date_end = Order::whereBetween('date_end', [$start, $end])->get(['id'])->toArray();
+//        $orders_created = Order::whereBetween('created_at', [$start, $end])->get(['id'])->toArray();
+//        $orders_date_end = Order::whereBetween('date_end', [$start, $end])->get(['id'])->toArray();
+        $orders = Order::where(function ($query) use ($start, $end) {
+            $query->where(function ($query) use ($start, $end) {
+                $query->where('created_at', '>=', $start)
+                    ->where('created_at', '<=', $end);
+            })->orWhere(function ($query) use ($start, $end) {
+                $query->where('date_end', '>=', $start)
+                    ->where('date_end', '<=', $end);
+            })->orWhere(function ($query) use ($start, $end) {
+                $query->where('created_at', '<=', $start)
+                    ->where('date_end', '>=', $end);
+            });
+        })->pluck('id');
 
-        $combinedOrders = array_merge($orders_created, $orders_date_end);
-        $uniqueOrders = collect($combinedOrders)->unique('id')->values()->all();
+//        $combinedOrders = array_merge($orders_created, $orders_date_end);
+//        $uniqueOrders = collect($combinedOrders)->unique('id')->values()->all();
 
         $array = [];
         $i = 0;
-        foreach ($uniqueOrders as $v){
+        foreach ($orders as $v){
             $order = self::whereId($v)->first();
             if($order){
                 if($order['date_end'] > $end){
