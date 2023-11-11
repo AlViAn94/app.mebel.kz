@@ -291,11 +291,13 @@ class Order extends Model
             $order = self::whereId($v)->first();
             if($order){
                 if($order['date_end'] > $end){
+                    $end = Carbon::parse($end)->format('Y-m-d');
                     $date_end = $end;
                 }else{
                     $date_end = $order['date_end']->format('Y-m-d');
                 }
                 if($order['created_at'] < $start){
+                    $start = Carbon::parse($start)->format('Y-m-d');
                     $date_start = $start;
                 }else{
                     $date_start = $order['created_at']->format('Y-m-d');
