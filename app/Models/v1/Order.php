@@ -276,11 +276,11 @@ class Order extends Model
     }
     public static function calendar($data)
     {
-        $start = Carbon::parse($data['date_start'])->format('Y-m-d');
-        $end = Carbon::parse($data['date_end'])->format('Y-m-d');
+        $startOfDay = Carbon::parse($data['date_start'])->startOfDay();
+        $endOfDay = Carbon::parse($data['date_end'])->endOfDay();
 
-        $orders_created = Order::whereBetween('created_at', [$start, $end])->get(['id'])->toArray();
-        $orders_date_end = Order::whereBetween('date_end', [$start, $end])->get(['id'])->toArray();
+        $orders_created = Order::whereBetween('created_at', [$startOfDay, $endOfDay])->get(['id'])->toArray();
+        $orders_date_end = Order::whereBetween('date_end', [$startOfDay, $endOfDay])->get(['id'])->toArray();
 
         $combinedOrders = array_merge($orders_created, $orders_date_end);
         $uniqueOrders = collect($combinedOrders)->unique('id')->values()->all();
