@@ -309,10 +309,8 @@ class Order extends Model
                     $color = 'blue';
                     break;
                 case 1:
-                    $color = 'yellow';
-                    break;
                 case 2:
-                    $color = 'brown';
+                    $color = 'yellow';
                     break;
                 case 3:
                     $color = 'green';
