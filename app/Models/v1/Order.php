@@ -312,7 +312,7 @@ class Order extends Model
                     $color = 'yellow';
                     break;
                 case 2:
-                    $color = 'braun';
+                    $color = 'brown';
                     break;
                 case 3:
                     $color = 'green';
