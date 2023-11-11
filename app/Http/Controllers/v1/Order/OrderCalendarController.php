@@ -10,6 +10,6 @@ class OrderCalendarController extends Controller
 {
     public function calendar(Request $request)
     {
-        return Order::calendar($request);
+        return Order::calendar($request->all());
     }
 }

@@ -20,7 +20,6 @@ class Comment extends Model
         $user_name = $user['name'];
         $user_position = $user['position'];
 
-
         if(!$position = RoleType::where('role', $user_position)->pluck('name')){
             return response()->json(['message' => 'Не верные данные.'], 404);
         }

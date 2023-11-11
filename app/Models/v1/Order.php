@@ -276,21 +276,62 @@ class Order extends Model
     }
     public static function calendar($data)
     {
-        $month = $data['date'];
-        $orders = Order::whereYear('date_end', '=', date('Y', strtotime($month)))
-            ->whereMonth('date_end', '=', date('m', strtotime($month)))
-            ->get()
-            ->toArray();
-        $ordersByDay = [];
-        $i = 1;
-        foreach ($orders as $order) {
-            $date_time = self::getDateEndAttribute($order['date_end']);
-            $day = $date_time->format('d');
+        $start = $data['date_start'];
+        $end = $data['date_end'];
 
-                $ordersByDay[$day][$i] = $order;
-                $i++;
+        $orders_created = Order::whereBetween('created_at', [$start, $end])->get(['id'])->toArray();
+        $orders_date_end = Order::whereBetween('date_end', [$start, $end])->get(['id'])->toArray();
+
+        $combinedOrders = array_merge($orders_created, $orders_date_end);
+        $uniqueOrders = collect($combinedOrders)->unique('id')->values()->all();
+
+        $array = [];
+        $i = 0;
+        foreach ($uniqueOrders as $v){
+            $order = self::whereId($v)->first();
+            if($order){
+                if($order['date_end'] > $end){
+                    $date_end = $end;
+                }else{
+                    $date_end = $order['date_end']->format('Y-m-d');
+                }
+                if($order['created_at'] < $start){
+                    $date_start = $start;
+                }else{
+                    $date_start = $order['created_at']->format('Y-m-d');
+                }
+            }else{
+                return $array;
+            }
+
+            switch ($order['status']){
+                case 0:
+                    $color = 'gray';
+                    break;
+                case 1:
+                    $color = 'blue';
+                    break;
+                case 2:
+                    $color = 'yellow';
+                    break;
+                case 3:
+                    $color = 'green';
+                    break;
+            }
+
+            $client = Client::where('id', $order['client_id'])->first();
+
+            $array[$i]['with'] = $client['surname'] . ' ' . $client['name'] . ' ' . $client['lastname'];
+            $array[$i]['title'] = $order['order_num'];
+            $array[$i]['time']['start'] = $date_start;
+            $array[$i]['time']['end'] = $date_end;
+            $array[$i]['color'] = $color;
+            $array[$i]['id'] = $order['id'];
+            $array[$i]['description'] = $order['comment'];
+            $i++;
         }
-        return $ordersByDay;
+
+        return $array;
     }
 
     public static function getStatisticSum($data)
