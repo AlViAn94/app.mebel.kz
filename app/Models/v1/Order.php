@@ -276,8 +276,8 @@ class Order extends Model
     }
     public static function calendar($data)
     {
-        $start = $data['date_start'];
-        $end = $data['date_end'];
+        $start = Carbon::parse($data['date_start'])->format('Y-m-d');
+        $end = Carbon::parse($data['date_end'])->format('Y-m-d');
 
         $orders_created = Order::whereBetween('created_at', [$start, $end])->get(['id'])->toArray();
         $orders_date_end = Order::whereBetween('date_end', [$start, $end])->get(['id'])->toArray();
