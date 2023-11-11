@@ -39,6 +39,7 @@ Route::middleware('auth:api','tenant')->group(function (){
             Route::get('send/{id}', [\App\Http\Controllers\v1\Order\OrderController::class, 'send']);
             Route::get('completed/{id}', [\App\Http\Controllers\v1\Order\OrderController::class, 'completed']);
             Route::get('calendar', [\App\Http\Controllers\v1\Order\OrderCalendarController::class, 'calendar']);
+            Route::resource('comment', '\App\Http\Controllers\v1\Order\OrderCommentController')->only('index', 'create', 'destroy');
         });
 
         // RegMy
