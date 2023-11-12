@@ -391,6 +391,49 @@ class Order extends Model
             return $result;
         }
         return $result;
+    }
 
+    static function graphicalStatistics($data)
+    {
+        $today = Carbon::today();
+        switch ($data){
+            case 'day':
+                $newCount = self::whereDate('created_at', $today)
+                    ->where('status', '>=' , 1)
+                    ->count();
+                return response()->json(['count' => $newCount]);
+
+            case 'week':
+                $s = 0;
+                for ($i = 0; $i < 7; $i++) {
+                    $newCount[$s] = self::whereDate('created_at', $today)
+                        ->where('status', '>=' , 1)
+                        ->count();
+                    $today->subDay();
+                    $s++;
+                }
+                $newCountReverse = array_reverse($newCount);
+
+                return response()->json(['count' => $newCountReverse]);
+
+            case 'month':
+                $s = 0;
+                for ($i = 0; $i < 31; $i++) {
+                    $newCount[$s] = self::whereDate('created_at', $today)
+                        ->where('status', '>=', 1)
+                        ->count();
+                    $today->subDay();
+                    $s++;
+                }
+
+                $newCountReverse = array_reverse($newCount);
+
+                return response()->json(['count' => $newCountReverse]);
+
+            case 'all':
+                $accCount = self::count();
+                return response()->json(['count' => $accCount]);
+        }
+        return response()->json(['message' => 'bad request'], 400);
     }
 }

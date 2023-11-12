@@ -51,6 +51,7 @@ Route::middleware('auth:api','tenant')->group(function (){
         // Statistic
         Route::prefix('statistic')->group(function () {
             Route::get('mix', [\App\Http\Controllers\v1\Statistics\StatisticController::class, 'statisticMix']);
+            Route::get('graphic/{period}', [\App\Http\Controllers\v1\Statistics\StatisticController::class, 'graphicalStatistics']);
         });
 
         // Office jobs
