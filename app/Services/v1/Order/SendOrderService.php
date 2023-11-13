@@ -27,7 +27,7 @@ class SendOrderService
         if($order){
 
             if($order['status'] >= 2){
-                return response()->json(['message' => 'Заказ уже завершён.'], 404);
+                return response()->json(['message' => 'Заказ уже передан в цех.'], 404);
             }
 
             $order->update([

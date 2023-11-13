@@ -80,11 +80,8 @@ Route::middleware('auth:api','tenant')->group(function (){
             Route::post('appoint/user', [App\Http\Controllers\v1\Order\Job\Factory\FactoryDirController::class, 'store']);
         });
 
-        // factory-dir
-
-    Route::prefix('dir')->group(function (){
-
-    });
+        // Location
+        Route::get('location/list', [\App\Http\Controllers\v1\Locations\LocationControllers::class, 'list']);
 
 });// middleware auth:api, tenant
 
