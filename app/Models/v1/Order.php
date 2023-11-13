@@ -127,13 +127,22 @@ class Order extends Model
             $sort = 'created_at';
         }
         $firstItemNumber = ($page - 1) * $page + 1;
-
-        $orders = Order::where('status', $status)
-            ->where(function ($query) use ($search) {
-                $query->where('order_num', 'LIKE', "%{$search}%");
-            })
-            ->orderBy($sort, $asc ? 'asc' : 'desc')
-            ->paginate($count, ['*'], 'page', $page);
+        if($status == null){
+            $orders = Order::where('status', '>=', 1)
+                ->where(function ($query) use ($search) {
+                    $query->where('order_num', 'LIKE', "%{$search}%");
+                })
+                ->orderBy('status', 'ASC')
+                ->orderBy('date_end', 'ASC')
+                ->paginate($count, ['*'], 'page', $page);
+        }else{
+            $orders = Order::where('status', $status)
+                ->where(function ($query) use ($search) {
+                    $query->where('order_num', 'LIKE', "%{$search}%");
+                })
+                ->orderBy($sort, $asc ? 'asc' : 'desc')
+                ->paginate($count, ['*'], 'page', $page);
+        }
 
         foreach ($orders as $v) {
             $v->order_number = $firstItemNumber++;
