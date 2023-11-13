@@ -10,6 +10,6 @@ class LocationControllers extends Controller
 {
     public function list(Request $request)
     {
-        Raion::list($request->all());
+        return Raion::list($request->all());
     }
 }

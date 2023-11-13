@@ -18,7 +18,7 @@ class Raion extends Model
             ->where('location_id', $region)
             ->get()
             ->toArray();
-dd($result);
+
         if($result){
             return $result;
         }else{
