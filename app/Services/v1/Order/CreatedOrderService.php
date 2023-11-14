@@ -11,6 +11,7 @@ class CreatedOrderService
     {
         DB::transaction(function () use ($request) {
             $client_id = $request['client_id'];
+            $district = $request['district'];
             $address = $request['address'];
             $sum = $request['sum'];
             $type = $request['type'];
@@ -23,6 +24,7 @@ class CreatedOrderService
             // Создание заказа
             $order = Order::create([
                 'client_id' => $client_id,
+                'district' => $district,
                 'order_num' => $order_num,
                 'address' => $address,
                 'sum' => $sum,
