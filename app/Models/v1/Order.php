@@ -23,6 +23,7 @@ class Order extends Model
      */
     protected $fillable = [
         'client_id',
+        'district',
         'address',
         'order_num',
         'sum',
