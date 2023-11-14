@@ -5,7 +5,7 @@ namespace App\Models\v1;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Raion extends Model
+class District extends Model
 {
     use HasFactory;
 
@@ -18,7 +18,6 @@ class Raion extends Model
             ->where('location_id', $region)
             ->get()
             ->toArray();
-
         if($result){
             return $result;
         }else{
