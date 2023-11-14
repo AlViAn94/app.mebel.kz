@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 use Illuminate\Support\Facades\File;
+use Intervention\Image\Facades\Image;
 
 class Regmy extends Model
 {
@@ -41,9 +42,10 @@ class Regmy extends Model
         $filePath = $directoryPath . '/' . $fileName;
 
         File::put($filePath, file_get_contents($file));
+
+        self::resizeImage($filePath);
+
         $fileLink = env('APP_URL') . ('/downloads/files/regmy/' . $fileName);
-
-
 
         if (File::exists($filePath)) {
             $existingRecord = self::where('user_id', $user['id'])
@@ -63,6 +65,7 @@ class Regmy extends Model
                         File::delete($filePath);
                         return response()->json(['message' => 'Не верный запрос.'], 404);
                     }
+
                 }
                     return response()->json(['action' => 'exit']);
             }else{
@@ -145,5 +148,28 @@ class Regmy extends Model
             return response()->json(['message' => $result]);
         }
         return response()->json(['message' => 'Зарегистрируйте вход.']);
+    }
+    public static function resizeImage($filePath)
+    {
+        // Проверяем, существует ли файл по указанному пути
+        if (file_exists($filePath)) {
+            // Создаем объект Intervention Image из файла
+            $image = Image::make($filePath);
+
+            // Уменьшаем размер изображения до, например, 800x600
+            $image->resize(300, 200, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+
+            // Сохраняем измененное изображение в тот же файл
+            $image->save();
+
+            // Возвращаем путь к измененному файлу
+            return $filePath;
+        } else {
+            // Обработка случая, если файл не существует
+            return response()->json(['error' => 'Файл не существует.'], 404);
+        }
     }
 }
