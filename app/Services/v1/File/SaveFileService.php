@@ -6,6 +6,7 @@ use App\Models\v1\Design;
 use App\Models\v1\Metring;
 use App\Models\v1\Role;
 use App\Models\v1\Technologist;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -48,11 +49,20 @@ class SaveFileService
             }
         }
 
+        $date = Carbon::now();
+        $year = $date->format('Y');
+        $month = $date->format('m');
+
         $zipName = Str::random(15) . '.zip';
-        $savePath = public_path('downloads/files/' . $db . '/');
+        $savePath = '/var/www/vhosts/app-mebel.kz/files/'. $year . '/' . $month . '/' . $db . '/';
         $zipPath = $savePath . $zipName;
 
         $zip = new ZipArchive();
+
+        // Проверяем наличие директорий и создаем их, если они отсутствуют
+        if (!File::exists($savePath)) {
+            File::makeDirectory($savePath, 0755, true, true);
+        }
 
         if ($zip->open($zipPath, ZipArchive::CREATE) === true) {
             foreach ($files as $file) {
