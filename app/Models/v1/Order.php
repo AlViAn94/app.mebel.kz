@@ -103,6 +103,7 @@ class Order extends Model
         if ($order) {
             $order->update([
                 'address' => $data['address'],
+                'district' => $data['district'],
                 'date_end' => $data['date_end'],
                 'type' => $data['type'],
                 'sum' => $data['sum']
@@ -148,7 +149,9 @@ class Order extends Model
             $v->order_number = $firstItemNumber++;
             $client = Client::where('id', $v['client_id'])->first();
             $full_name = $client['name'] . ' ' . $client['surname'] . ' ' . $client['lastname'];
+            $address = $v['district'] . ' ' . $v['address'];
             $v->full_name = $full_name;
+            $v->full_address = $address;
         }
         return $orders;
     }
@@ -224,6 +227,8 @@ class Order extends Model
         foreach ($orders as $v) {
             $client = Client::where('id', $v['client_id'])->first();
             $full_name = $client['name'] . ' ' . $client['surname'] . ' ' . $client['lastname'];
+            $address = $v['district'] . ' ' . $v['address'];
+            $v->full_address = $address;
             $v->order_number = $firstItemNumber++;
             $v->full_name = $full_name;
             $v->card_id = $job_id[$s];
