@@ -451,24 +451,5 @@ class Order extends Model
 
     public function getOrdersPercentage()
     {
-        $results = self::selectRaw('
-            WITH OrdersCount AS (
-                SELECT raions.id AS raion_id, raions.raion_name, COUNT(orders.id) AS order_count
-                FROM raions
-                LEFT JOIN orders ON raions.id = orders.raion_id
-                GROUP BY raions.id, raions.raion_name
-            ),
-            MaxOrders AS (
-                SELECT MAX(order_count) AS max_orders
-                FROM OrdersCount
-            )
-
-            SELECT raion_id, raion_name,
-                (order_count * 100.0 / (SELECT max_orders FROM MaxOrders)) AS order_percentage
-            FROM OrdersCount, MaxOrders
-            ORDER BY order_percentage DESC;
-        ')->get();
-
-        return $results;
     }
 }

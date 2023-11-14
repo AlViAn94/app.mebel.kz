@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 use Illuminate\Support\Facades\File;
+use Intervention\Image\Facades\Image;
 
 class Regmy extends Model
 {
@@ -23,6 +24,70 @@ class Regmy extends Model
 
     public static function regMyImportPhoto($file)
     {
+//        $user = Auth::user();
+//
+//        $directoryPath = public_path('downloads/files/regmy');
+//
+//        $date = Carbon::now();
+//        $date_time = $date->format('Y-m-d_H:m:s');
+//        $date_add = $date->format('Y-m-d');
+//
+//        if (!File::isDirectory($directoryPath)) {
+//            File::makeDirectory($directoryPath, 0755, true, true);
+//        }
+//
+//        $extension = $file->getClientOriginalExtension();
+//
+//        $fileName = $user['iin'] . '_' . $date_time . '.' . $extension;
+//        $filePath = $directoryPath . '/' . $fileName;
+//
+//        $image = Image::make($file);
+//        $image->resize(800, 600, function ($constraint) {
+//            $constraint->aspectRatio();
+//            $constraint->upsize();
+//        });
+//        $image->save($filePath);
+//
+//        File::put($filePath, file_get_contents($file));
+//        $fileLink = env('APP_URL') . ('/downloads/files/regmy/' . $fileName);
+//
+//
+//
+//        if (File::exists($filePath)) {
+//            $existingRecord = self::where('user_id', $user['id'])
+//                ->where('created_at', 'LIKE', '%' . $date_add . '%')
+//                ->first();
+//            if($existingRecord){
+//                if($existingRecord['exit_time'] != null){
+//                    return response()->json(['message' => 'Вы уже зарегистрировали вход и выход за сегодня.'], 404);
+//                }else{
+//                    $result = self::where('user_id', $user['id'])
+//                        ->where('entrance_time', $existingRecord['entrance_time'])
+//                        ->update([
+//                            'exit_time' => $date,
+//                            'exit_file' => $fileLink
+//                        ]);
+//                    if (!$result) {
+//                        File::delete($filePath);
+//                        return response()->json(['message' => 'Не верный запрос.'], 404);
+//                    }
+//                }
+//                    return response()->json(['action' => 'exit']);
+//            }else{
+//                $result = self::insert([
+//                    'user_id' => $user['id'],
+//                    'name' => $user['name'],
+//                    'entrance_time' => $date,
+//                    'entrance_file' => $fileLink
+//                ]);
+//                    if (!$result) {
+//                        File::delete($filePath);
+//                        return response()->json(['message' => 'Не верный запрос.'], 404);
+//                    }
+//                return response()->json(['action' => 'entrance']);
+//            }
+//        }
+//        return response()->json(['message' => 'Не верный запрос.'], 404);
         $user = Auth::user();
 
         $directoryPath = public_path('downloads/files/regmy');
@@ -40,49 +105,55 @@ class Regmy extends Model
         $fileName = $user['iin'] . '_' . $date_time . '.' . $extension;
         $filePath = $directoryPath . '/' . $fileName;
 
-        File::put($filePath, file_get_contents($file));
+        // Изменения для использования Intervention Image
+        $image = Image::make($file);
+        $image->resize(300, 200, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        });
+        $image->save($filePath);
+
         $fileLink = env('APP_URL') . ('/downloads/files/regmy/' . $fileName);
 
+        $existingRecord = self::where('user_id', $user['id'])
+            ->where('created_at', 'LIKE', '%' . $date_add . '%')
+            ->first();
 
+        if ($existingRecord) {
+            if ($existingRecord['exit_time'] != null) {
+                return response()->json(['message' => 'Вы уже зарегистрировали вход и выход за сегодня.'], 404);
+            } else {
+                $result = self::where('user_id', $user['id'])
+                    ->where('entrance_time', $existingRecord['entrance_time'])
+                    ->update([
+                        'exit_time' => $date,
+                        'exit_file' => $fileLink
+                    ]);
 
-        if (File::exists($filePath)) {
-            $existingRecord = self::where('user_id', $user['id'])
-                ->where('created_at', 'LIKE', '%' . $date_add . '%')
-                ->first();
-            if($existingRecord){
-                if($existingRecord['exit_time'] != null){
-                    return response()->json(['message' => 'Вы уже зарегистрировали вход и выход за сегодня.'], 404);
-                }else{
-                    $result = self::where('user_id', $user['id'])
-                        ->where('entrance_time', $existingRecord['entrance_time'])
-                        ->update([
-                            'exit_time' => $date,
-                            'exit_file' => $fileLink
-                        ]);
-                    if (!$result) {
-                        File::delete($filePath);
-                        return response()->json(['message' => 'Не верный запрос.'], 404);
-                    }
+                if (!$result) {
+                    // Удаляем изображение, если не удалось обновить запись
+                    File::delete($filePath);
+                    return response()->json(['message' => 'Не верный запрос.'], 404);
                 }
-                    return response()->json(['action' => 'exit']);
-            }else{
-                $result = self::insert([
-                    'user_id' => $user['id'],
-                    'name' => $user['name'],
-                    'entrance_time' => $date,
-                    'entrance_file' => $fileLink
-                ]);
-                    if (!$result) {
-                        File::delete($filePath);
-                        return response()->json(['message' => 'Не верный запрос.'], 404);
-                    }
-                return response()->json(['action' => 'entrance']);
             }
+
+            return response()->json(['action' => 'exit']);
+        } else {
+            $result = self::insert([
+                'user_id' => $user['id'],
+                'name' => $user['name'],
+                'entrance_time' => $date,
+                'entrance_file' => $fileLink
+            ]);
+
+            if (!$result) {
+                // Удаляем изображение, если не удалось вставить новую запись
+                File::delete($filePath);
+                return response()->json(['message' => 'Не верный запрос.'], 404);
+            }
+
+            return response()->json(['action' => 'entrance']);
         }
-        return response()->json(['message' => 'Не верный запрос.'], 404);
-
-
-
     }
 
     public static function getList($data)
