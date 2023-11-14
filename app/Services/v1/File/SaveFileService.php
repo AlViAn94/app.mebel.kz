@@ -54,7 +54,7 @@ class SaveFileService
         $month = $date->format('m');
 
         $zipName = Str::random(15) . '.zip';
-        $savePath = '/var/www/vhosts/app-mebel.kz/files/'. $year . '/' . $month . '/' . $db . '/';
+        $savePath = '/var/www/vhosts/app-mebel.kz/files/' . $year . '/' . $month . '/' . $db . '/';
         $zipPath = $savePath . $zipName;
 
         $zip = new ZipArchive();
@@ -78,7 +78,7 @@ class SaveFileService
             }
         }
 
-        $zipLink = env('APP_URL') . '/downloads/files/' . $db . '/' . $zipName;
+        $zipLink = '/var/www/vhosts/app-mebel.kz/files/' . $db . '/' . $zipName;
 
         $service = new AddLinkDataBaseService();
 
