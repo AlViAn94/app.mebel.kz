@@ -118,8 +118,6 @@ class Order extends Model
 
     public static function list($data)
     {
-        $basePath = base_path();
-        dd($basePath);
         $search = $data['search'];
         $status = $data['status'];
         $sort = $data['sort'];
