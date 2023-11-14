@@ -157,7 +157,7 @@ class Regmy extends Model
             $image = Image::make($filePath);
 
             // Уменьшаем размер изображения до, например, 800x600
-            $image->resize(300, 200, function ($constraint) {
+            $image->resize(200, 150, function ($constraint) {
                 $constraint->aspectRatio();
                 $constraint->upsize();
             });
