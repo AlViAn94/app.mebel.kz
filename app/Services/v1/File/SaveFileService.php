@@ -2,6 +2,7 @@
 
 namespace App\Services\v1\File;
 
+use App\Models\v1\Connection;
 use App\Models\v1\Design;
 use App\Models\v1\Metring;
 use App\Models\v1\Role;
@@ -49,12 +50,13 @@ class SaveFileService
             }
         }
 
+        $connection_name = Connection::where('id', $user['connection_id'])->pluck('database');
+
         $date = Carbon::now();
         $year = $date->format('Y');
-        $month = $date->format('m');
 
         $zipName = Str::random(15) . '.zip';
-        $savePath = '/var/www/vhosts/app-mebel.kz/files/'. $db . '/' . $year . '/' . $month . '/' . $db . '/';
+        $savePath = '/var/www/vhosts/app-mebel.kz/files/'. $year . '/' . $connection_name[0]  . '/' . $db . '/';
         $zipPath = $savePath . $zipName;
 
         $zip = new ZipArchive();
@@ -78,7 +80,7 @@ class SaveFileService
             }
         }
 
-        $zipLink = 'https://app-mebel.kz/files/'. $db . '/' . $year . '/' . $month . '/' . $zipName;
+        $zipLink = 'https://files.app-mebel.kz/'. $year . '/' . $connection_name[0]  . '/' . $db . '/' . $zipName;
 
         $service = new AddLinkDataBaseService();
 
