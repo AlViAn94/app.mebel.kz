@@ -36,7 +36,7 @@ class DownloadFileService
 
         $user = Auth::user();
         $connection_name = Connection::where('id', $user['connection_id'])->pluck('database');
-        $save_path = env('FILE_LINK') . '/' . $year . '/' . $connection_name[0] . '/zip';
+        $save_path = env('FILE_PATH') . '/' . $year . '/' . $connection_name[0] . '/zip';
 
         if (!File::exists($save_path)) {
             File::makeDirectory($save_path, 0755, true, true);
@@ -54,7 +54,9 @@ class DownloadFileService
             }
             $zip->close();
 
-            return response()->json(['link' => $zipFilename]);
+            $link_download = env('FILE_LINK') . '/' . $year . '/' . $connection_name[0] . '/zip/app.zip';
+
+            return response()->json(['link' => $link_download]);
         } else {
             return false;
         }
