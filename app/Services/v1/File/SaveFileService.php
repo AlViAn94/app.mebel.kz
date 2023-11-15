@@ -50,27 +50,27 @@ class SaveFileService
             }
         }
 
-        $connection_name = Connection::where('id', $user['connection_id'])->pluck('database');
+        // новый метод
 
+        $connection_name = Connection::where('id', $user['connection_id'])->pluck('database');
         $date = Carbon::now();
         $year = $date->format('Y');
+        $save_path = '/var/www/vhosts/app-mebel.kz/files/'. $year . '/' . $connection_name[0]  . '/' . $db . '/';
+        $files_link = [];
+        $i = 0;
+        foreach ($files as $file){
+            $extension = $file->getClientOriginalExtension();
+            $file_name = Str::random(15) . $extension;
+            $file_path = $save_path . $file_name;
 
-        $zipName = Str::random(15) . '.zip';
-        $savePath = '/var/www/vhosts/app-mebel.kz/files/'. $year . '/' . $connection_name[0]  . '/' . $db . '/';
-        $zipPath = $savePath . $zipName;
-
-        $zip = new ZipArchive();
-
-        // Проверяем наличие директорий и создаем их, если они отсутствуют
-        if (!File::exists($savePath)) {
-            File::makeDirectory($savePath, 0755, true, true);
-        }
-
-        if ($zip->open($zipPath, ZipArchive::CREATE) === true) {
-            foreach ($files as $file) {
-                $zip->addFile($file->getRealPath(), $file->getClientOriginalName());
+            if (!File::exists($save_path)) {
+                File::makeDirectory($save_path, 0755, true, true);
             }
-            $zip->close();
+
+            File::put($file_path, file_get_contents($file));
+
+            $file_link = 'https://files.app-mebel.kz/'. $year . '/' . $connection_name[0]  . '/' . $db . '/' . $file_name;
+            $files_link[$i] = $file_link;
         }
 
         // Удалите исходные файлы, если это необходимо
@@ -80,11 +80,9 @@ class SaveFileService
             }
         }
 
-        $zipLink = 'https://files.app-mebel.kz/'. $year . '/' . $connection_name[0]  . '/' . $db . '/' . $zipName;
-
         $service = new AddLinkDataBaseService();
 
-        $result = $service->importFileLinkDb($model, $zipLink, $db, $id);
+        $result = $service->importFileLinkDb($model, $files_link, $db, $id);
         if ($result !== true) {
             return $result;
         } else {
