@@ -60,7 +60,7 @@ class SaveFileService
         $i = 0;
         foreach ($files as $file){
             $extension = $file->getClientOriginalExtension();
-            $file_name = Str::random(15) . '.' .$extension;
+            $file_name = $file->getClientOriginalName();
             $file_path = $save_path . $file_name;
 
             if (!File::exists($save_path)) {
@@ -70,7 +70,8 @@ class SaveFileService
             File::put($file_path, file_get_contents($file));
 
             $file_link = 'https://files.app-mebel.kz/'. $year . '/' . $connection_name[0]  . '/' . $db . '/' . $file_name;
-            $files_link[$i] = $file_link;
+            $files_link[$i]['link'] = $file_link;
+            $files_link[$i]['type'] = $extension;
             $i++;
         }
 
