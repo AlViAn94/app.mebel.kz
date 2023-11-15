@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AddLinkDataBaseService
 {
-    public function importFileLinkDb($model, $zipLink, $db, $id)
+    public function importFileLinkDb($model, $files_link, $db, $id)
     {
         $user = Auth::user();
         $datetime = Carbon::now();
@@ -24,7 +24,7 @@ class AddLinkDataBaseService
             switch ($db){
                 case 'metrings':
                     $model = Metring::where('order_id', $id)->update([
-                        'file' => $zipLink,
+                        'file' => $files_link,
                         'status' => 2,
                         'passed_date' => $date
                     ]);
@@ -32,7 +32,7 @@ class AddLinkDataBaseService
 
                 case 'design':
                     $model = Design::where('order_id', $id)->update([
-                        'file' => $zipLink,
+                        'file' => $files_link,
                         'status' => 2,
                         'passed_date' => $date
                     ]);
@@ -40,7 +40,7 @@ class AddLinkDataBaseService
 
                 case 'technologists':
                     $model = Technologist::where('order_id', $id)->update([
-                        'file' => $zipLink,
+                        'file' => $files_link,
                         'status' => 2,
                         'passed_date' => $date
                     ]);

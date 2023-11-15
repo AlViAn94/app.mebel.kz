@@ -71,6 +71,7 @@ class SaveFileService
 
             $file_link = 'https://files.app-mebel.kz/'. $year . '/' . $connection_name[0]  . '/' . $db . '/' . $file_name;
             $files_link[$i] = $file_link;
+            $i++;
         }
 
         // Удалите исходные файлы, если это необходимо
