@@ -43,9 +43,6 @@ class SaveFileService
             if ($model->user_id != $user['id']) {
                 return response()->json(['message' => 'У вас нет прав на это действие!'], 404);
             }
-            if ($model->file != null) {
-                return response()->json(['message' => 'Файл уже добавлен!'], 404);
-            }
         }
 
         // новый метод
@@ -73,14 +70,14 @@ class SaveFileService
             $files_link[$i]['type'] = $extension;
 
             $service = new AddLinkDataBaseService();
-            $result = $service->importFileLinkDb($model, $file_link, $position, $order_id, $extension);
+            $service->importFileLinkDb($model, $file_link, $position, $order_id, $extension);
 
-            if ($result !== true) {
-                $file_path = $save_path . $file->getClientOriginalName();
-                if (File::exists($file_path)) {
-                    File::delete($file_path);
-                }
-            }
+//            if ($result !== true) {
+//                $file_path = $save_path . $file->getClientOriginalName();
+//                if (File::exists($file_path)) {
+//                    File::delete($file_path);
+//                }
+//            }
             $i++;
         }
 
