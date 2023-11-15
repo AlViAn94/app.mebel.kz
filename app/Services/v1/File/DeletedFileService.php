@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
-
 class DeletedFileService
 {
     public function deletedFile($data)
@@ -33,7 +32,7 @@ class DeletedFileService
         if ($file) {
             $file_name = $file->file_name;
 
-            $delete_file = '/var/www/vhosts/app-mebel.kz/files/'. $year . '/' . $connection_name[0]  . '/' . $position . '/' . $file_name;
+            $delete_file = env('FILE_PATH') . $year . '/' . $connection_name[0]  . '/' . $position . '/' . $file_name;
             if (File::exists($delete_file)){
                 File::delete($delete_file);
             }

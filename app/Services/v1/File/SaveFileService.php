@@ -51,7 +51,7 @@ class SaveFileService
         $connection_name = Connection::where('id', $user['connection_id'])->pluck('database');
         $date = Carbon::now();
         $year = $date->format('Y');
-        $save_path = '/var/www/vhosts/app-mebel.kz/files/'. $year . '/' . $connection_name[0]  . '/' . $position . '/';
+        $save_path = env('FILE_PATH'). $year . '/' . $connection_name[0]  . '/' . $position . '/';
         $files_link = [];
         $i = 0;
 
@@ -73,7 +73,7 @@ class SaveFileService
 
             File::put($file_path, file_get_contents($file));
 
-            $file_link = 'https://files.app-mebel.kz/'. $year . '/' . $connection_name[0]  . '/' . $position . '/' . $file_name;
+            $file_link = env('FILE_LINK'). $year . '/' . $connection_name[0]  . '/' . $position . '/' . $file_name;
             $files_link[$i]['type'] = $extension;
 
             $service = new AddLinkDataBaseService();
@@ -88,6 +88,8 @@ class SaveFileService
                 File::delete($file->getRealPath());
             }
         }
+
+
 
         return response()->json(['message' => 'Файлы успешно сохранены!']);
     }

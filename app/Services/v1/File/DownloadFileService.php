@@ -2,19 +2,21 @@
 
 namespace App\Services\v1\File;
 
+use App\Models\v1\OrderFile;
 use Illuminate\Support\Facades\DB;
 
 class DownloadFileService
 {
-    public function downloadFile($dir, $id)
+    public function downloadFile($data)
     {
-        $link = DB::table($dir)->where('order_id', $id)->select('file')->first();
-        if(!$link){
-            return response()->json(['message' => 'Файл не найден!'], 404);
-        }
+        $position = $data['position'];
+        $order_id = $data['order_id'];
 
-        $zipLink['link'] = $link->file;
+        OrderFile::where('order_id', $order_id)
+            ->where('position', $position)
+            ->get()
+            ->toArray();
 
-        return $zipLink;
+
     }
 }

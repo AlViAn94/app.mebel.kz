@@ -37,7 +37,7 @@ class FileController extends Controller
 
     public function download(Request $request, DownloadFileService $service)
     {
-        return $service->downloadFile($request->dir, $request->id);
+        return $service->downloadFile($request->all());
     }
 
     public function update(Request $request, UpdateFileService $service)

@@ -32,6 +32,7 @@ class AddLinkDataBaseService
                 case 'metrings':
                     $model = Metring::where('order_id', $order_id)->update([
                         'status' => 2,
+                        'file' => 'exist',
                         'passed_date' => $date
                     ]);
                     break;
@@ -39,6 +40,7 @@ class AddLinkDataBaseService
                 case 'design':
                     $model = Design::where('order_id', $order_id)->update([
                         'status' => 2,
+                        'file' => 'exist',
                         'passed_date' => $date
                     ]);
                     break;
@@ -46,6 +48,7 @@ class AddLinkDataBaseService
                 case 'technologists':
                     $model = Technologist::where('order_id', $order_id)->update([
                         'status' => 2,
+                        'file' => 'exist',
                         'passed_date' => $date
                     ]);
                     break;
