@@ -48,12 +48,13 @@ class DownloadFileService
 
         if ($zip->open($zipFilename, ZipArchive::CREATE) === TRUE) {
             foreach ($order_links as $link) {
-                $filename = basename($link);
-                $zip->addFile($link, $filename);
+                $newPath = str_replace("http://192.168.0.106:8088", env('REPLACE_DIR'), $link);
+                $filename = basename($newPath);
+                $zip->addFile($newPath, $filename);
             }
             $zip->close();
 
-            return $zipFilename;
+            return response()->json(['link' => $zipFilename]);
         } else {
             return false;
         }
