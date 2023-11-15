@@ -44,7 +44,7 @@ class OrderFile extends Model
             return response()->json(['message' => 'bad request.'], 400);
         }
 
-        $format = ['jpeg', 'jpg', 'png'];
+        $format = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'tiff', 'webp'];
 
         $array = [
             'img' => [],
