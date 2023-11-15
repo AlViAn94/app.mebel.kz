@@ -52,10 +52,10 @@ class AddLinkDataBaseService
             }
 
             Order::where('id', $order_id)->update([
-                $db => 2,
+                $position => 2,
             ]);
 
-            if($db == 'technologists'){
+            if($position == 'technologists'){
                 Order::where('id', $order_id)->update([
                     'status' => 1
                 ]);
