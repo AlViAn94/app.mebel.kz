@@ -26,11 +26,23 @@ class DeletedFileService
             return response()->json(['message' => 'У вас нет прав на это действие.'], 404);
         }
 
-        $result = File::whereId($file_id)->delete();
-        if(!$result){
-            return response()->json(['message' => 'Файл не найден!'], 404);
+        $file = File::find($file_id);
+
+        if ($file) {
+            $file_dir = $file->value('link');
+
+            if (File::exists($file_dir)) {
+                File::delete($file_dir);
+            }
+
+            $result = $file->delete();
+
+            if (!$result) {
+                return response()->json(['message' => 'Файл не найден!'], 404);
+            }
         }
 
         return response()->json(['message' => 'Файл успешно удален.']);
     }
+
 }
