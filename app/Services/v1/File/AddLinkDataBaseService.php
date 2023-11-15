@@ -3,6 +3,7 @@
 namespace App\Services\v1\File;
 
 use App\Models\v1\Design;
+use App\Models\v1\File;
 use App\Models\v1\Metring;
 use App\Models\v1\Order;
 use App\Models\v1\Technologist;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AddLinkDataBaseService
 {
-    public function importFileLinkDb($model, $files_link, $db, $id)
+    public function importFileLinkDb($file_link, $position, $id, $extension)
     {
         $user = Auth::user();
         $datetime = Carbon::now();
@@ -21,34 +22,15 @@ class AddLinkDataBaseService
             if($model->user_id != $user['id']){
                 return response()->json(['message' => 'У вас нет прав на это действие!'], 404);
             }
-            switch ($db){
-                case 'metrings':
-                    $model = Metring::where('order_id', $id)->update([
-                        'file' => json_encode($files_link, JSON_UNESCAPED_SLASHES),
-                        'status' => 2,
-                        'passed_date' => $date
-                    ]);
-                    break;
 
-                case 'design':
-                    $model = Design::where('order_id', $id)->update([
-                        'file' => json_encode($files_link, JSON_UNESCAPED_SLASHES),
-                        'status' => 2,
-                        'passed_date' => $date
-                    ]);
-                    break;
-
-                case 'technologists':
-                    $model = Technologist::where('order_id', $id)->update([
-                        'file' => json_encode($files_link, JSON_UNESCAPED_SLASHES),
-                        'status' => 2,
-                        'passed_date' => $date
-                    ]);
-                    break;
+            $result = File::saveFile($file_link, $position, $id, $extension);
+            if(!$result){
+                return response()->json(['message' => 'bad request'], 400);
             }
             Order::where('id', $id)->update([
                 $db => 2,
             ]);
+
             if($db == 'technologists'){
                 Order::where('id', $id)->update([
                     'status' => 1

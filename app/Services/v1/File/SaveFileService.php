@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 class SaveFileService
 {
-    public function importFiles($files, $db, $id)
+    public function importFiles($files, $position, $order_id)
     {
         $user = Auth::user();
         $user_id = $user['id'];
@@ -20,21 +20,21 @@ class SaveFileService
         $roles = Role::getPositions($user_id);
         $error = 'У вас нет прав на это действие.';
 
-        if (!in_array($db, $roles)) {
+        if (!in_array($position, $roles)) {
             return response()->json(['message' => $error]);
         }
 
-        switch ($db){
+        switch ($position){
             case 'metrings':
-                $model = Metring::where('order_id', $id)->first();
+                $model = Metring::where('order_id', $order_id)->first();
                 break;
 
             case 'design':
-                $model = Design::where('order_id', $id)->first();
+                $model = Design::where('order_id', $order_id)->first();
                 break;
 
             case 'technologists':
-                $model = Technologist::where('order_id', $id)->first();
+                $model = Technologist::where('order_id', $order_id)->first();
             break;
         }
 
@@ -53,7 +53,7 @@ class SaveFileService
         $connection_name = Connection::where('id', $user['connection_id'])->pluck('database');
         $date = Carbon::now();
         $year = $date->format('Y');
-        $save_path = '/var/www/vhosts/app-mebel.kz/files/'. $year . '/' . $connection_name[0]  . '/' . $db . '/';
+        $save_path = '/var/www/vhosts/app-mebel.kz/files/'. $year . '/' . $connection_name[0]  . '/' . $position . '/';
         $files_link = [];
         $i = 0;
         foreach ($files as $file){
@@ -67,9 +67,18 @@ class SaveFileService
 
             File::put($file_path, file_get_contents($file));
 
-            $file_link = 'https://files.app-mebel.kz/'. $year . '/' . $connection_name[0]  . '/' . $db . '/' . $file_name;
-            $files_link[$i]['link'] = $file_link;
+            $file_link = 'https://files.app-mebel.kz/'. $year . '/' . $connection_name[0]  . '/' . $position . '/' . $file_name;
             $files_link[$i]['type'] = $extension;
+
+            $service = new AddLinkDataBaseService();
+            $result = $service->importFileLinkDb($file_link, $position, $order_id, $extension);
+
+            if ($result !== true) {
+                $file_path = $save_path . $file->getClientOriginalName();
+                if (File::exists($file_path)) {
+                    File::delete($file_path);
+                }
+            }
             $i++;
         }
 
@@ -80,20 +89,6 @@ class SaveFileService
             }
         }
 
-        $service = new AddLinkDataBaseService();
-
-        $result = $service->importFileLinkDb($model, $files_link, $db, $id);
-        if ($result !== true) {
-            foreach ($files as $file) {
-                $file_path = $save_path . $file->getClientOriginalName();
-
-                if (File::exists($file_path)) {
-                    File::delete($file_path);
-                }
-            }
-            return $result;
-        } else {
-            return response()->json(['message' => 'Файлы успешно сохранены!']);
-        }
+        return response()->json(['message' => 'Файлы успешно сохранены!']);
     }
 }
