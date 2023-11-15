@@ -48,7 +48,7 @@ class DownloadFileService
 
         if ($zip->open($zipFilename, ZipArchive::CREATE) === TRUE) {
             foreach ($order_links as $link) {
-                $newPath = str_replace("http://192.168.0.106:8088", env('REPLACE_DIR'), $link);
+                $newPath = str_replace(env('APP_URLFILE'), env('REPLACE_DIR'), $link);
                 $filename = basename($newPath);
                 $zip->addFile($newPath, $filename);
             }
