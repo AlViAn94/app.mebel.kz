@@ -24,7 +24,7 @@ class AddLinkDataBaseService
             switch ($db){
                 case 'metrings':
                     $model = Metring::where('order_id', $id)->update([
-                        'file' => $files_link,
+                        'file' => json_encode($files_link, JSON_UNESCAPED_SLASHES),
                         'status' => 2,
                         'passed_date' => $date
                     ]);
@@ -32,7 +32,7 @@ class AddLinkDataBaseService
 
                 case 'design':
                     $model = Design::where('order_id', $id)->update([
-                        'file' => $files_link,
+                        'file' => json_encode($files_link, JSON_UNESCAPED_SLASHES),
                         'status' => 2,
                         'passed_date' => $date
                     ]);
@@ -40,7 +40,7 @@ class AddLinkDataBaseService
 
                 case 'technologists':
                     $model = Technologist::where('order_id', $id)->update([
-                        'file' => $files_link,
+                        'file' => json_encode($files_link, JSON_UNESCAPED_SLASHES),
                         'status' => 2,
                         'passed_date' => $date
                     ]);
