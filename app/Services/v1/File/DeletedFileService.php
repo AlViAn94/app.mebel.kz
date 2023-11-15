@@ -5,6 +5,7 @@ namespace App\Services\v1\File;
 use App\Models\v1\Connection;
 use App\Models\v1\OrderFile;
 use App\Models\v1\Role;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
@@ -26,6 +27,7 @@ class DeletedFileService
 
         $file = OrderFile::find($file_id);
         $connection_name = Connection::where('id', $user['connection_id'])->pluck('database');
+        $date = Carbon::now();
         $year = $date->format('Y');
 
         if ($file) {
