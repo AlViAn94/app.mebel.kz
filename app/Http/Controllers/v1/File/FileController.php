@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1\File;
 
 use App\Http\Controllers\Controller;
+use App\Models\v1\OrderFile;
 use App\Services\v1\File\DeletedFileService;
 use App\Services\v1\File\DownloadFileService;
 use App\Services\v1\File\SaveFileService;
@@ -66,5 +67,10 @@ class FileController extends Controller
     public function deleted(Request $request, DeletedFileService $service)
     {
         return $service->deletedFile($request->all());
+    }
+
+    public function list(Request $request)
+    {
+        return OrderFile::fileList($request->all());
     }
 }

@@ -30,4 +30,19 @@ class OrderFile extends Model
             'extension' => $extension
         ]);
     }
+
+    public static function fileList($data)
+    {
+        $order_id = $data['order_id'];
+        $position = $data['position'];
+
+        $result = self::where('order_id', $order_id)
+            ->where('position', $position)
+            ->get()
+            ->toArray();
+        if(!$result){
+            return response()->json(['message' => 'bad request.'], 400);
+        }
+        return $result;
+    }
 }

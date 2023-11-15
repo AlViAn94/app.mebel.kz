@@ -68,6 +68,7 @@ Route::middleware('auth:api','tenant')->group(function (){
                     Route::get('download', 'download');
                     Route::post('update', 'update');
                     Route::get('deleted', 'deleted');
+                    Route::get('list', 'list');
                 });
         });
 
