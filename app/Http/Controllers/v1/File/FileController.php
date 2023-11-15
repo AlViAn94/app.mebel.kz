@@ -41,29 +41,6 @@ class FileController extends Controller
         return $service->downloadFile($request->all());
     }
 
-    public function update(Request $request, UpdateFileService $service)
-    {
-        $files = [];
-        $index = 0;
-        // Получите файлы и другие параметры
-        while ($request->hasFile('file' . $index)) {
-            $fileKey = 'file' . $index;
-            $files[$fileKey] = $request->file($fileKey);
-            $index++;
-        }
-        $dir = $request->input('dir');
-        $id = $request->input('id');
-
-        // Ваш код обработки файлов и параметров
-        $result = $service->updateFiles($files, $dir, $id);
-
-        if ($result instanceof \Illuminate\Http\JsonResponse) {
-            return $result;
-        } else {
-            return response()->json(['message' => 'Файлы успешно сохранены!']);
-        }
-    }
-
     public function deleted(Request $request, DeletedFileService $service)
     {
         return $service->deletedFile($request->all());
