@@ -56,14 +56,16 @@ class SaveFileService
         $save_path = '/var/www/vhosts/app-mebel.kz/files/'. $year . '/' . $connection_name[0]  . '/' . $position . '/';
         $files_link = [];
         $i = 0;
+
+        if (!File::exists($save_path)) {
+            File::makeDirectory($save_path, 0755, true, true);
+        }
+
         foreach ($files as $file){
             $extension = $file->getClientOriginalExtension();
             $file_name = $file->getClientOriginalName();
+            $file_name = preg_replace('/\s+/', ' ', $file_name);
             $file_path = $save_path . $file_name;
-
-            if (!File::exists($save_path)) {
-                File::makeDirectory($save_path, 0755, true, true);
-            }
 
             File::put($file_path, file_get_contents($file));
 
