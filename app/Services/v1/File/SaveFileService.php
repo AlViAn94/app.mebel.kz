@@ -62,14 +62,14 @@ class SaveFileService
         foreach ($files as $file){
             $extension = $file->getClientOriginalExtension();
             $file_name = $file->getClientOriginalName();
-            $file_path = $save_path . $file_name;
             $file_exist = OrderFile::where('file_name', $file_name)->first();
 
             if ($file_exist) {
-                // Если файл с таким именем уже существует, добавляем текущую дату и время
                 $currentDateTime = Carbon::now()->format('YmdHis');
                 $file_name = pathinfo($file_name, PATHINFO_FILENAME) . '_' . $currentDateTime . '.' . $extension;
             }
+
+            $file_path = $save_path . $file_name;
 
             File::put($file_path, file_get_contents($file));
 
