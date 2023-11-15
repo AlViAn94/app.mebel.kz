@@ -31,7 +31,7 @@ class DeletedFileService
         $year = $date->format('Y');
 
         if ($file) {
-            $file_name = $file->value('file_name');
+            $file_name = $file->file_name;
 
             $delete_file = '/var/www/vhosts/app-mebel.kz/files/'. $year . '/' . $connection_name[0]  . '/' . $position . '/' . $file_name;
             if (File::exists($delete_file)){
