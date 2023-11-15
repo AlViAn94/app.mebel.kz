@@ -10,8 +10,6 @@ use App\Models\v1\Technologist;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
-use ZipArchive;
 class SaveFileService
 {
     public function importFiles($files, $db, $id)
@@ -86,6 +84,13 @@ class SaveFileService
 
         $result = $service->importFileLinkDb($model, $files_link, $db, $id);
         if ($result !== true) {
+            foreach ($files as $file) {
+                $file_path = $save_path . $file->getClientOriginalName();
+
+                if (File::exists($file_path)) {
+                    File::delete($file_path);
+                }
+            }
             return $result;
         } else {
             return response()->json(['message' => 'Файлы успешно сохранены!']);
