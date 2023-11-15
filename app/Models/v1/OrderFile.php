@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
-class File extends Model
+class OrderFile extends Model
 {
     use HasFactory, UsesTenantConnection;
 
@@ -21,7 +21,7 @@ class File extends Model
 
     public static function saveFile($file_link, $position, $order_id, $extension, $user_id)
     {
-        return File::insert([
+        return self::insert([
             'link' => $file_link,
             'position' => $position,
             'order_id' => $order_id,

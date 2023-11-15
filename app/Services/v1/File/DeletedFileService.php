@@ -2,14 +2,11 @@
 
 namespace App\Services\v1\File;
 
-use App\Models\v1\Connection;
-use App\Models\v1\Design;
-use App\Models\v1\File;
-use App\Models\v1\Metring;
-use App\Models\v1\Order;
+use App\Models\v1\OrderFile;
 use App\Models\v1\Role;
-use App\Models\v1\Technologist;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+
 
 class DeletedFileService
 {
@@ -26,12 +23,12 @@ class DeletedFileService
             return response()->json(['message' => 'У вас нет прав на это действие.'], 404);
         }
 
-        $file = File::find($file_id);
+        $file = OrderFile::find($file_id);
 
         if ($file) {
             $file_dir = $file->value('link');
 
-            if (File::exists($file_dir)) {
+            if (File::exists($file_dir)){
                 File::delete($file_dir);
             }
 
