@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AddLinkDataBaseService
 {
-    public function importFileLinkDb($file_link, $position, $id, $extension)
+    public function importFileLinkDb($file_link, $position, $order_id, $extension)
     {
         $user = Auth::user();
         $datetime = Carbon::now();
@@ -23,10 +23,34 @@ class AddLinkDataBaseService
                 return response()->json(['message' => 'У вас нет прав на это действие!'], 404);
             }
 
-            $result = File::saveFile($file_link, $position, $id, $extension);
+            $result = File::saveFile($file_link, $position, $order_id, $extension, $user['id']);
             if(!$result){
                 return response()->json(['message' => 'bad request'], 400);
             }
+
+            switch ($position){
+                case 'metrings':
+                    $model = Metring::where('order_id', $order_id)->update([
+                        'status' => 2,
+                        'passed_date' => $date
+                    ]);
+                    break;
+
+                case 'design':
+                    $model = Design::where('order_id', $order_id)->update([
+                        'status' => 2,
+                        'passed_date' => $date
+                    ]);
+                    break;
+
+                case 'technologists':
+                    $model = Technologist::where('order_id', $order_id)->update([
+                        'status' => 2,
+                        'passed_date' => $date
+                    ]);
+                    break;
+            }
+
             Order::where('id', $id)->update([
                 $db => 2,
             ]);

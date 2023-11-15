@@ -22,11 +22,11 @@ class FileController extends Controller
             $files[$fileKey] = $request->file($fileKey);
             $index++;
         }
-        $db = $request->input('dir');
-        $id = $request->input('id');
+        $position = $request->input('position');
+        $order_id = $request->input('order_id');
 
         // Ваш код обработки файлов и параметров
-        $result = $service->importFiles($files, $db, $id);
+        $result = $service->importFiles($files, $position, $order_id);
 
         if ($result instanceof \Illuminate\Http\JsonResponse) {
             return $result;

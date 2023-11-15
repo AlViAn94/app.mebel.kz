@@ -19,12 +19,13 @@ class File extends Model
         'extension'
     ];
 
-    public static function saveFile($file_link, $position, $id, $extension)
+    public static function saveFile($file_link, $position, $order_id, $extension, $user_id)
     {
         return File::insert([
             'link' => $file_link,
             'position' => $position,
-            'user_id' => $id,
+            'order_id' => $order_id,
+            'user_id' => $user_id,
             'extension' => $extension
         ]);
     }
