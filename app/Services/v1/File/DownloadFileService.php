@@ -3,7 +3,6 @@
 namespace App\Services\v1\File;
 
 use App\Models\v1\OrderFile;
-use Illuminate\Support\Facades\DB;
 
 class DownloadFileService
 {
@@ -16,7 +15,5 @@ class DownloadFileService
             ->where('position', $position)
             ->get()
             ->toArray();
-
-
     }
 }

@@ -449,7 +449,39 @@ class Order extends Model
         return response()->json(['message' => 'bad request'], 400);
     }
 
-    public function getOrdersPercentage()
+    public static function getOrdersPercentage($period)
     {
+        $currentYear = Carbon::now()->year;
+
+        switch ($period){
+            case 'month':
+                $currentMonth = Carbon::now()->month;
+                $orders = self::whereMonth('created_at', $currentMonth)
+                    ->whereYear('created_at', $currentYear)
+                    ->get();
+                break;
+            case 'year';
+                $currentYear = Carbon::now()->year;
+                $orders = self::whereYear('created_at', $currentYear)
+                    ->whereYear('created_at', $currentYear)
+                    ->get();
+                break;
+            case 'all':
+                $orders = self::all();
+        }
+
+        $ordersByDistrict = $orders->groupBy('district');
+
+        $orderCounts = $ordersByDistrict->map(function ($orders) {
+            return $orders->count();
+        });
+
+        $maxOrders = $orderCounts->max();
+
+        $percentageByLocation = $orderCounts->map(function ($count) use ($maxOrders) {
+            return round(($count / $maxOrders) * 100);
+        });
+
+        return $percentageByLocation;
     }
 }

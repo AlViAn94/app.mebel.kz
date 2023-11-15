@@ -43,6 +43,20 @@ class OrderFile extends Model
         if(!$result){
             return response()->json(['message' => 'bad request.'], 400);
         }
-        return $result;
+
+        $format = ['jpeg', 'jpg', 'png'];
+
+        $array = [
+            'img' => [],
+            'doc' => [],
+        ];
+
+        foreach ($result as $item) {
+            if (in_array($item['extension'], $format)) {
+                $array['img'][] = $item;
+            }
+            $array['doc'][] = $item;
+        }
+        return $array;
     }
 }

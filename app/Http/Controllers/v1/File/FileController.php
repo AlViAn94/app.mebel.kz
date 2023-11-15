@@ -69,7 +69,7 @@ class FileController extends Controller
         return $service->deletedFile($request->all());
     }
 
-    public function list(Request $request)
+    public function getList(Request $request)
     {
         return OrderFile::fileList($request->all());
     }

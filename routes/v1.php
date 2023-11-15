@@ -52,7 +52,7 @@ Route::middleware('auth:api','tenant')->group(function (){
         Route::prefix('statistic')->group(function () {
             Route::get('mix', [\App\Http\Controllers\v1\Statistics\StatisticController::class, 'statisticMix']);
             Route::get('graphic/{period}', [\App\Http\Controllers\v1\Statistics\StatisticController::class, 'graphicalStatistics']);
-            Route::get('order/percentage', [\App\Http\Controllers\v1\Statistics\OrderPercentageController::class, 'statistic']);
+            Route::get('map/{period}', [\App\Http\Controllers\v1\Statistics\OrderPercentageController::class, 'statistic']);
         });
 
         // Office jobs
@@ -68,7 +68,7 @@ Route::middleware('auth:api','tenant')->group(function (){
                     Route::get('download', 'download');
                     Route::post('update', 'update');
                     Route::get('deleted', 'deleted');
-                    Route::get('list', 'list');
+                    Route::get('list', 'getList');
                 });
         });
 

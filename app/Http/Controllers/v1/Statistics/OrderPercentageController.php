@@ -7,8 +7,8 @@ use App\Models\v1\Order;
 
 class OrderPercentageController extends Controller
 {
-    public static function statistic()
+    public static function statistic($period)
     {
-        return Order::getOrdersPercentage();
+        return Order::getOrdersPercentage($period);
     }
 }
