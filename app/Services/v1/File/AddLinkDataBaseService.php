@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AddLinkDataBaseService
 {
-    public function importFileLinkDb($file_link, $position, $order_id, $extension)
+    public function importFileLinkDb($model, $file_link, $position, $order_id, $extension)
     {
         $user = Auth::user();
         $datetime = Carbon::now();

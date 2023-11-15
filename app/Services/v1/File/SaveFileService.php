@@ -71,7 +71,7 @@ class SaveFileService
             $files_link[$i]['type'] = $extension;
 
             $service = new AddLinkDataBaseService();
-            $result = $service->importFileLinkDb($file_link, $position, $order_id, $extension);
+            $result = $service->importFileLinkDb($model, $file_link, $position, $order_id, $extension);
 
             if ($result !== true) {
                 $file_path = $save_path . $file->getClientOriginalName();
