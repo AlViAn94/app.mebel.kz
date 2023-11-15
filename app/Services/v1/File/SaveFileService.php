@@ -61,7 +61,6 @@ class SaveFileService
         foreach ($files as $file){
             $extension = $file->getClientOriginalExtension();
             $file_name = $file->getClientOriginalName();
-            $file_name = preg_replace('/\s+/', ' ', $file_name);
             $file_path = $save_path . $file_name;
 
             File::put($file_path, file_get_contents($file));
@@ -72,12 +71,6 @@ class SaveFileService
             $service = new AddLinkDataBaseService();
             $service->importFileLinkDb($model, $file_link, $position, $order_id, $extension);
 
-//            if ($result !== true) {
-//                $file_path = $save_path . $file->getClientOriginalName();
-//                if (File::exists($file_path)) {
-//                    File::delete($file_path);
-//                }
-//            }
             $i++;
         }
 

@@ -65,6 +65,6 @@ class FileController extends Controller
 
     public function deleted(Request $request, DeletedFileService $service)
     {
-        return $service->deletedFile($request->dir, $request->id);
+        return $service->deletedFile($request->all());
     }
 }
