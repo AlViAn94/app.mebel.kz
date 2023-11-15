@@ -19,13 +19,14 @@ class OrderFile extends Model
         'extension'
     ];
 
-    public static function saveFile($file_link, $position, $order_id, $extension, $user_id)
+    public static function saveFile($file_link, $position, $order_id, $extension, $user_id, $file_name)
     {
         return self::insert([
             'link' => $file_link,
             'position' => $position,
             'order_id' => $order_id,
             'user_id' => $user_id,
+            'file_name' => $file_name,
             'extension' => $extension
         ]);
     }

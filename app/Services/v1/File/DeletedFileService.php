@@ -2,6 +2,7 @@
 
 namespace App\Services\v1\File;
 
+use App\Models\v1\Connection;
 use App\Models\v1\OrderFile;
 use App\Models\v1\Role;
 use Illuminate\Support\Facades\Auth;
@@ -24,12 +25,15 @@ class DeletedFileService
         }
 
         $file = OrderFile::find($file_id);
+        $connection_name = Connection::where('id', $user['connection_id'])->pluck('database');
+        $year = $date->format('Y');
 
         if ($file) {
-            $file_dir = $file->value('link');
+            $file_name = $file->value('file_name');
 
-            if (File::exists($file_dir)){
-                File::delete($file_dir);
+            $delete_file = '/var/www/vhosts/app-mebel.kz/files/'. $year . '/' . $connection_name[0]  . '/' . $position . '/' . $file_name;
+            if (File::exists($delete_file)){
+                File::delete($delete_file);
             }
 
             $result = $file->delete();

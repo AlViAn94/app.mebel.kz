@@ -3,7 +3,7 @@
 namespace App\Services\v1\File;
 
 use App\Models\v1\Design;
-use App\Models\v1\File;
+use App\Models\v1\OrderFile;
 use App\Models\v1\Metring;
 use App\Models\v1\Order;
 use App\Models\v1\Technologist;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AddLinkDataBaseService
 {
-    public function importFileLinkDb($model, $file_link, $position, $order_id, $extension)
+    public function importFileLinkDb($model, $file_link, $position, $order_id, $extension, $file_name)
     {
         $user = Auth::user();
         $datetime = Carbon::now();
@@ -23,7 +23,7 @@ class AddLinkDataBaseService
                 return response()->json(['message' => 'У вас нет прав на это действие!'], 404);
             }
 
-            $result = File::saveFile($file_link, $position, $order_id, $extension, $user['id']);
+            $result = OrderFile::saveFile($file_link, $position, $order_id, $extension, $user['id'], $file_name);
             if(!$result){
                 return response()->json(['message' => 'bad request'], 400);
             }

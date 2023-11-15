@@ -69,7 +69,7 @@ class SaveFileService
             $files_link[$i]['type'] = $extension;
 
             $service = new AddLinkDataBaseService();
-            $service->importFileLinkDb($model, $file_link, $position, $order_id, $extension);
+            $service->importFileLinkDb($model, $file_link, $position, $order_id, $extension, $file_name);
 
             $i++;
         }
