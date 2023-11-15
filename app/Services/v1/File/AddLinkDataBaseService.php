@@ -51,12 +51,12 @@ class AddLinkDataBaseService
                     break;
             }
 
-            Order::where('id', $id)->update([
+            Order::where('id', $order_id)->update([
                 $db => 2,
             ]);
 
             if($db == 'technologists'){
-                Order::where('id', $id)->update([
+                Order::where('id', $order_id)->update([
                     'status' => 1
                 ]);
             }
