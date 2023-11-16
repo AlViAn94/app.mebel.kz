@@ -77,7 +77,7 @@ Route::middleware('auth:api','tenant')->group(function (){
             Route::resource('card', '\App\Http\Controllers\v1\Order\Job\Factory\FactoryCardController');
             Route::post('submitted/order', [App\Http\Controllers\v1\Order\Job\SubmittedOrderController::class, 'submittedOrder']);
             Route::post('cancel/order', [App\Http\Controllers\v1\Order\Job\CancelOrderController::class, 'store']);
-            Route::get('position', [App\Http\Controllers\v1\Order\Job\Factory\FactoryTypeController::class, 'index']);
+            Route::resource('position', '\App\Http\Controllers\v1\Order\Job\Factory\FactoryTypeController');
             Route::get('users/list', [App\Http\Controllers\v1\Order\Job\Factory\FactoryDirController::class, 'index']);
             Route::post('appoint/user', [App\Http\Controllers\v1\Order\Job\Factory\FactoryDirController::class, 'store']);
         });
