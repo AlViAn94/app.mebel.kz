@@ -36,7 +36,7 @@ class AuthService
         $role = [];
         $i = 0;
 
-        $type_office = ['technologists', 'metrings', 'design', 'manager', 'dir', 'admin'];
+        $type_office = ['technologists', 'metrings', 'design', 'manager', 'dir', 'admin', 'foreman'];
 
         foreach ($data as $v) {
             switch ($v->role) {
