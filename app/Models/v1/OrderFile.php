@@ -54,8 +54,9 @@ class OrderFile extends Model
         foreach ($result as $item) {
             if (in_array($item['extension'], $format)) {
                 $array['img'][] = $item;
+            }else{
+                $array['doc'][] = $item;
             }
-            $array['doc'][] = $item;
         }
         return $array;
     }
