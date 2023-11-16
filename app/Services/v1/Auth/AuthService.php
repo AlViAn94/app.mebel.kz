@@ -36,9 +36,30 @@ class AuthService
         $role = [];
         $i = 0;
 
+        $type_office = ['technologists', 'metrings', 'design'];
+
         foreach ($data as $v) {
+            switch ($v->role) {
+                case in_array($v->role, $type_office):
+                    $type = 'office';
+                    break;
+                case 'manager':
+                    $type = 'manager';
+                    break;
+                case 'dir':
+                    $type = 'dir';
+                    break;
+                case 'admin':
+                    $type = 'admin';
+                    break;
+                default:
+                    $type = 'work_shop';
+                    break;
+            }
+
             $role[$i]['to'] = '/' . $v->role;
             $role[$i]['title'] = $v->name;
+            $role[$i]['type'] = $type;
             $i++;
         }
 
