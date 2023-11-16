@@ -39,15 +39,7 @@ class SaveFileService
             break;
         }
 
-        if ($model) {
-            $user = Auth::user();
-            if ($model->user_id != $user['id']) {
-                return response()->json(['message' => 'У вас нет прав на это действие!'], 404);
-            }
-        }
-
         // новый метод
-
         $connection_name = Connection::where('id', $user['connection_id'])->pluck('database');
         $date = Carbon::now();
         $year = $date->format('Y');
