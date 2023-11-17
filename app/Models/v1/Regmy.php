@@ -43,6 +43,8 @@ class Regmy extends Model
 
         File::put($filePath, file_get_contents($file));
 
+        chmod($filePath, 0644);
+
         self::resizeImage($filePath);
 
         $fileLink = env('APP_URL') . ('/downloads/files/regmy/' . $fileName);

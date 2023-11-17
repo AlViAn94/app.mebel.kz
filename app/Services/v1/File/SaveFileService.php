@@ -73,6 +73,8 @@ class SaveFileService
 
             File::put($file_path, file_get_contents($file));
 
+            chmod($file_path, 0644);
+
             $file_link = env('FILE_LINK'). $year . '/' . $connection_name[0]  . '/' . $position . '/' . $file_name;
             $files_link[$i]['type'] = $extension;
 
