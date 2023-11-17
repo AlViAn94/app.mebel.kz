@@ -54,6 +54,8 @@ class DownloadFileService
             }
             $zip->close();
 
+            chmod($zipFilename, 0644);
+
             $link_download = env('FILE_LINK') . '/' . $year . '/' . $connection_name[0] . '/zip/app.zip';
 
             return response()->json(['link' => $link_download]);
