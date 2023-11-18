@@ -467,8 +467,9 @@ class Order extends Model
         return response()->json(['message' => 'bad request'], 400);
     }
 
-    public static function getOrdersPercentage($period)
+    public static function getMapStatistic($data)
     {
+        $period = $data['period'];
         $currentYear = Carbon::now()->year;
 
         switch ($period){
@@ -476,30 +477,50 @@ class Order extends Model
                 $currentMonth = Carbon::now()->month;
                 $orders = self::whereMonth('created_at', $currentMonth)
                     ->whereYear('created_at', $currentYear)
+                    ->groupBy('district')
+                    ->select('district', self::raw('count(*) as order_count'))
                     ->get();
                 break;
-            case 'year';
-                $currentYear = Carbon::now()->year;
+
+            case 'year':  // Исправлено от ';'
                 $orders = self::whereYear('created_at', $currentYear)
-                    ->whereYear('created_at', $currentYear)
+                    ->groupBy('district')
+                    ->select('district', self::raw('count(*) as order_count'))
                     ->get();
                 break;
+
             case 'all':
-                $orders = self::all();
+                $orders = self::groupBy('district')
+                    ->select('district', self::raw('count(*) as order_count'))
+                    ->get();
+                break;
         }
 
-        $ordersByDistrict = $orders->groupBy('district');
+        $array = [];
 
-        $orderCounts = $ordersByDistrict->map(function ($orders) {
-            return $orders->count();
-        });
-
-        $maxOrders = $orderCounts->max();
-
-        $percentageByLocation = $orderCounts->map(function ($count) use ($maxOrders) {
-            return round(($count / $maxOrders) * 100);
-        });
-
-        return $percentageByLocation;
+        if($orders){
+            $district = District::list($data);
+            foreach ($district as $item) {
+                $array[$item['district']]['name'] = $item['name'];
+                $array[$item['district']]['city'] = $item['city'];
+                $orderFound = false;
+                foreach ($orders as $order) {
+                    if ($order['district'] == $item['district']) {
+                        $array[$item['district']]['count'] = $order['order_count'];
+                        $maxCount = max(array_column($orders->toArray(), 'order_count'));
+                        $percentage = round(($order['order_count'] / $maxCount) * 100);
+                        $array[$item['district']]['percentage'] = $percentage;
+                        $orderFound = true;
+                    }
+                }
+                if (!$orderFound) {
+                    $array[$item['district']]['count'] = 0;
+                    $array[$item['district']]['percentage'] = 0;
+                }
+            }
+            return $array;
+        } else {
+            return $array;
+        }
     }
 }

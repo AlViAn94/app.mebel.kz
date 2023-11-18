@@ -11,12 +11,8 @@ class District extends Model
 
     public static function list($data)
     {
-        $region = $data['region'];
-        $type = $data['type'];
 
-        $result = self::where('city', $type)
-            ->where('location_id', $region)
-            ->get()
+        $result = self::get()
             ->toArray();
         if($result){
             return $result;
