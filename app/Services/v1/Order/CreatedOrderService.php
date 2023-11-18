@@ -18,15 +18,18 @@ class CreatedOrderService
             $date_end = $request['date_end'];
             $comment = $request['comment'];
 
+            $address_full = $district['name'] . ' ' . $address;
+
             $last = Order::getLastNum();
             $order_num = $last == null?201000:$last->order_num+1;
 
             // Создание заказа
             $order = Order::create([
                 'client_id' => $client_id,
-                'district' => $district,
+                'district' => $district['district'],
+                'district_name' => $district['name'],
                 'order_num' => $order_num,
-                'address' => $address,
+                'address' => $address_full,
                 'sum' => $sum,
                 'type' => $type,
                 'date_end' => $date_end,
