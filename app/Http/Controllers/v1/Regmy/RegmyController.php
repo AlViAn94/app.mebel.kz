@@ -25,4 +25,9 @@ class RegmyController extends Controller
     {
         return Regmy::getList($request->all());
     }
+
+    public function addTime(Request $request)
+    {
+        return Regmy::addTime($request->all());
+    }
 }

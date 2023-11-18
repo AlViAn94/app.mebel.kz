@@ -174,4 +174,37 @@ class Regmy extends Model
             return response()->json(['error' => 'Файл не существует.'], 404);
         }
     }
+
+    public static function addTime($data = null)
+    {
+        if ($data != null) {
+            $existingRecord = self::find($data['id']);
+            $exist = $existingRecord[$data['action']];
+            if (!$exist){
+                // если есть запись
+                $result = self::whereId($data['id'])
+                    ->update([
+                        $data['action']. '_' . 'time' => $data['time'],
+                    ]);
+                if(!$result){
+                    return response()->json(['message' => 'bad request'], 400);
+                }
+                return response()->json(['message' => 'Время добавлено.']);
+            } else {
+                // если нет записи
+                $png = 'https://files.app-mebel.kz/project_files/regmy.png';
+                $result = self::whereId($data['id'])
+                    ->update([
+                        $data['action'] . '_' . 'time' => $data['time'],
+                        $data['action']. '_' . 'file' => $png,
+                    ]);
+                if(!$result){
+                    return response()->json(['message' => 'bad request'], 400);
+                }
+                return response()->json(['message' => 'Вы изменили время регистрации.']);
+            }
+        }
+
+        return response()->json(['message' => 'bad request'], 400);
+    }
 }
