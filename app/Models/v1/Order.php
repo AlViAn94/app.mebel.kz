@@ -118,6 +118,23 @@ class Order extends Model
 
     public static function list($data)
     {
+        $user = Auth::user();
+        $user_id = $user['id'];
+        $roles = Role::getPositions($user_id);
+
+        $positions = [
+            'dir',
+            'manager',
+            'admin',
+            'design',
+            'metrings',
+            'technologists',
+        ];
+
+        if (empty(array_intersect($positions, $roles))) {
+            return response()->json(['message' => 'У вас нет доступа.'], 404);
+        }
+
         $search = $data['search'];
         $status = $data['status'];
         $sort = $data['sort'];
@@ -128,6 +145,7 @@ class Order extends Model
         if (empty($sort)) {
             $sort = 'created_at';
         }
+
         $firstItemNumber = ($page - 1) * $page + 1;
         if($status == null){
             $orders = Order::where('status', '>=', 1)
