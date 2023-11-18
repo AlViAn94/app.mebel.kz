@@ -100,12 +100,14 @@ class Order extends Model
 
     public static function updateOrder($data)
     {
+        $district = $data['district'];
         $order = Order::find($data['id']);
 
         if ($order) {
             $order->update([
                 'address' => $data['address'],
-                'district' => $data['district'],
+                'district' => $district['district'],
+                'district_name' => $district['district_name'],
                 'date_end' => $data['date_end'],
                 'type' => $data['type'],
                 'sum' => $data['sum']
