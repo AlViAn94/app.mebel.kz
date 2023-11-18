@@ -27,7 +27,6 @@ class CreatedOrderService
             $order = Order::create([
                 'client_id' => $client_id,
                 'district' => $district['district'],
-                'district_name' => $district['name'],
                 'order_num' => $order_num,
                 'address' => $address_full,
                 'sum' => $sum,
