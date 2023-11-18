@@ -100,14 +100,23 @@ class Order extends Model
 
     public static function updateOrder($data)
     {
-        $district = $data['district'];
+        if (is_string($data['district'])) {
+            $result = District::where('district', $data['district'])->first();
+            $district['district'] = $result['district'];
+            $district['name'] = $result['name'];
+        } else {
+            $data_dist = $data['district'];
+            $district['district'] = $data_dist['district'];
+            $district['name'] = $data_dist['name'];
+        }
+
         $order = Order::find($data['id']);
 
         if ($order) {
             $order->update([
                 'address' => $data['address'],
                 'district' => $district['district'],
-                'district_name' => $district['district_name'],
+                'district_name' => $district['name'],
                 'date_end' => $data['date_end'],
                 'type' => $data['type'],
                 'sum' => $data['sum']
