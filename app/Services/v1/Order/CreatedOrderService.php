@@ -24,8 +24,7 @@ class CreatedOrderService
             // Создание заказа
             $order = Order::create([
                 'client_id' => $client_id,
-                'district' => $district['district'],
-                'district_name' => $district['name'],
+                'district' => $district,
                 'order_num' => $order_num,
                 'address' => $address,
                 'sum' => $sum,
