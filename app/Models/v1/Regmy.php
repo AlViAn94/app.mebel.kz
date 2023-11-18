@@ -179,12 +179,12 @@ class Regmy extends Model
     {
         if ($data != null) {
             $existingRecord = self::find($data['id']);
-            $exist = $existingRecord[$data['action']];
+            $exist = $existingRecord[$data['action'] . '_' . 'time'];
             if (!$exist){
                 // если есть запись
                 $result = self::whereId($data['id'])
                     ->update([
-                        $data['action']. '_' . 'time' => $data['time'],
+                        $data['action'] . '_' . 'time' => $data['time'],
                     ]);
                 if(!$result){
                     return response()->json(['message' => 'bad request'], 400);
