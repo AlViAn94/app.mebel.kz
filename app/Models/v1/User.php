@@ -110,6 +110,7 @@ class User extends Authenticatable implements JWTSubject
                 })
                 ->where('connection_id', $connection)
                 ->where('position', '!=', 'admin')
+                ->where('position', '!=', 'dir')
                 ->orderBy($sort, $asc ? 'asc' : 'desc')
                 ->paginate($count, ['*'], 'page', $page);
 
