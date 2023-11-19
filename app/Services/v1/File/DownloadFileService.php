@@ -46,7 +46,7 @@ class DownloadFileService
 
         $zip = new ZipArchive;
 
-        if ($zip->open($zipFilename, ZipArchive::CREATE) === TRUE) {
+        if ($zip->open($zipFilename, ZipArchive::OVERWRITE) === TRUE) {
             foreach ($order_links as $link) {
                 $newPath = str_replace(env('APP_URLFILE'), env('REPLACE_DIR'), $link);
                 $filename = basename($newPath);
