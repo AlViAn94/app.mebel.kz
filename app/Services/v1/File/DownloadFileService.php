@@ -33,10 +33,11 @@ class DownloadFileService
         }
         $date = Carbon::now();
         $year = $date->format('Y');
+        $month = $date->format('Y-m');
 
         $user = Auth::user();
         $connection_name = Connection::where('id', $user['connection_id'])->pluck('database');
-        $save_path = env('FILE_PATH') . '/' . $year . '/' . $connection_name[0] . '/zip';
+        $save_path = env('FILE_PATH') . '/' . $year . '/' . $month . '/'. $connection_name[0] . '/zip';
 
         if (!File::exists($save_path)) {
             File::makeDirectory($save_path, 0755, true, true);
@@ -56,7 +57,7 @@ class DownloadFileService
 
             chmod($zipFilename, 0644);
 
-            $link_download = env('FILE_LINK') . '/' . $year . '/' . $connection_name[0] . '/zip/app.zip';
+            $link_download = env('FILE_LINK') . '/' . $year . '/' . $month . '/' . $connection_name[0] . '/zip/app.zip';
 
             return response()->json(['link' => $link_download]);
         } else {

@@ -51,7 +51,9 @@ class SaveFileService
         $connection_name = Connection::where('id', $user['connection_id'])->pluck('database');
         $date = Carbon::now();
         $year = $date->format('Y');
-        $save_path = env('FILE_PATH'). $year . '/' . $connection_name[0]  . '/' . $position . '/';
+        $month = $date->format('Y-m');
+
+        $save_path = env('FILE_PATH'). $year . '/' . $month . '/' . $connection_name[0]  . '/' . $position . '/';
         $files_link = [];
         $i = 0;
 
@@ -75,7 +77,7 @@ class SaveFileService
 
             chmod($file_path, 0644);
 
-            $file_link = env('FILE_LINK'). $year . '/' . $connection_name[0]  . '/' . $position . '/' . $file_name;
+            $file_link = env('FILE_LINK'). $year . '/' . $month . '/' . $connection_name[0]  . '/' . $position . '/' . $file_name;
             $files_link[$i]['type'] = $extension;
 
             $service = new AddLinkDataBaseService();
