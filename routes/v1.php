@@ -9,6 +9,13 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthController::class, 'actionLoginUser']);
 Route::post('admin/user/confirm', [PassConfirmController::class, 'addPassword']);
 
+// landing
+Route::prefix('landing')->group(function () {
+    Route::resource('application', '\App\Http\Controllers\v1\Landing\ApplicationController')->only('create');
+    Route::resource('comment', '\App\Http\Controllers\v1\Landing\CommentClientController')->only('index', 'store', 'create', 'update');
+    Route::get('check/order', [\App\Http\Controllers\v1\Landing\CheckOrderController::class, 'checkOrder']);
+});
+
 Route::middleware('auth:api','tenant')->group(function (){
         // user interface
         Route::controller(AuthController::class)
@@ -86,12 +93,10 @@ Route::middleware('auth:api','tenant')->group(function (){
         // location
         Route::get('location/list', [\App\Http\Controllers\v1\Locations\LocationControllers::class, 'list']);
 
-        // landing
-        Route::prefix('landing')->group(function () {
-            Route::resource('application', '\App\Http\Controllers\v1\Landing\ApplicationController')->only('index', 'create', 'update');
-            Route::resource('comment', '\App\Http\Controllers\v1\Landing\CommentClientController')->only('index', 'store', 'create', 'update');
-            Route::get('check/order', [\App\Http\Controllers\v1\Landing\CheckOrderController::class, 'checkOrder']);
-        });
+    Route::prefix('landing')->group(function () {
+        Route::resource('application', '\App\Http\Controllers\v1\Landing\ApplicationController')->only('index', 'update');
+    });
+
 });// middleware auth:api, tenant
 
 
