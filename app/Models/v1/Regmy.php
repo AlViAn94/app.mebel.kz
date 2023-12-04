@@ -19,6 +19,7 @@ class Regmy extends Model
     protected $fillable = [
         'user_id',
         'action',
+        'lost_time',
         'file'
     ];
 
@@ -71,11 +72,22 @@ class Regmy extends Model
                 }
                     return response()->json(['action' => 'exit']);
             }else{
+                // Рассчитываем время опоздания
+                $lateTime = Carbon::parse('09:00:00')->diffInMinutes($date, false);
+
+                // Если сотрудник опоздал, сохраняем время опоздания
+                if ($lateTime > 0) {
+                    $lost_time = $lateTime;
+                }else{
+                    $lost_time = null;
+                }
+
                 $result = self::insert([
                     'user_id' => $user['id'],
                     'name' => $user['name'],
                     'entrance_time' => $date,
-                    'entrance_file' => $fileLink
+                    'entrance_file' => $fileLink,
+                    'lost_time' => $lost_time,
                 ]);
                     if (!$result) {
                         File::delete($filePath);
@@ -204,7 +216,6 @@ class Regmy extends Model
                 return response()->json(['message' => 'Вы изменили время регистрации.']);
             }
         }
-
         return response()->json(['message' => 'bad request'], 400);
     }
 }

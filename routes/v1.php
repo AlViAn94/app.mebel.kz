@@ -83,9 +83,15 @@ Route::middleware('auth:api','tenant')->group(function (){
             Route::post('appoint/user', [App\Http\Controllers\v1\Order\Job\Factory\FactoryDirController::class, 'store']);
         });
 
-        // Location
+        // location
         Route::get('location/list', [\App\Http\Controllers\v1\Locations\LocationControllers::class, 'list']);
 
+        // landing
+        Route::prefix('landing')->group(function () {
+            Route::resource('application', '\App\Http\Controllers\v1\Landing\ApplicationController')->only('index', 'create', 'update');
+            Route::resource('comment', '\App\Http\Controllers\v1\Landing\CommentClientController')->only('index', 'store', 'create', 'update');
+            Route::get('check/order', [\App\Http\Controllers\v1\Landing\CheckOrderController::class, 'checkOrder']);
+        });
 });// middleware auth:api, tenant
 
 
