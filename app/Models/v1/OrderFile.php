@@ -41,7 +41,7 @@ class OrderFile extends Model
             ->get()
             ->toArray();
         if(!$result){
-            return response()->json(['message' => 'bad request.'], 400);
+            return response()->json(['message' => 'Файлы не найдены.'], 400);
         }
 
         $format = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'tiff', 'webp'];
