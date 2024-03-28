@@ -26,7 +26,7 @@ class ClientRequest extends FormRequest
     public function rules()
     {
         return [
-            'iin' => 'numeric|digits:12',
+            'iin' => 'nullable|numeric|digits:12',
             'name' => 'required|string',
             'surname' => 'nullable|string',
             'lastname' => 'nullable|string',
