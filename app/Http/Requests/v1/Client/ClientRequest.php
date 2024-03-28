@@ -31,7 +31,7 @@ class ClientRequest extends FormRequest
             'surname' => 'nullable|string',
             'lastname' => 'nullable|string',
             'phone' => 'required|integer',
-            'email' => 'nullable|required|email',
+            'email' => 'nullable|email',
         ];
     }
 
