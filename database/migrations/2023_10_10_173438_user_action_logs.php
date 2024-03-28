@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create("user_action_logs", function (Blueprint $table) {
+        Schema::connection('test')->create("user_action_logs", function (Blueprint $table) {
             $table->bigIncrements("id");
             $table->string("name", 255);
             $table->integer("user_id");

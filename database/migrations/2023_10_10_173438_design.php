@@ -8,18 +8,13 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create("design", function (Blueprint $table) {
+        Schema::connection('test')->create("design", function (Blueprint $table) {
             $table->bigIncrements("id");
             $table->bigInteger("order_id");
             $table->string("file", 255);
             $table->integer("user_id");
             $table->integer("status");
             $table->timestamps();
-
-            $table->foreign('order_id')
-                ->references('id')
-                ->on('orders')
-                ->onDelete('cascade');
         });
     }
 

@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create("orders", function (Blueprint $table) {
+        Schema::connection('test')->create("orders", function (Blueprint $table) {
             $table->unsignedBigInteger("id");
             $table->bigInteger("client_id");
             $table->string("order_num", 255);
@@ -22,8 +22,23 @@ return new class extends Migration
 
             $table->foreign('client_id')
                 ->references('id')
-                ->on('clients')
-                ->onDelete('cascade');
+                ->on('clients');
+
+            $table->foreign('order_id')
+                ->references('id')
+                ->on('jobs');
+
+            $table->foreign('order_id')
+                ->references('id')
+                ->on('technologists');
+
+            $table->foreign('design')
+                ->references('id')
+                ->on('design');
+
+            $table->foreign('jobs')
+                ->references('id')
+                ->on('metrings');
         });
     }
 

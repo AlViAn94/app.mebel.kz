@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create("failed_jobs", function (Blueprint $table) {
+        Schema::connection('test')->create("failed_jobs", function (Blueprint $table) {
             $table->bigIncrements("id");
             $table->string("uuid", 255);
             $table->text("connection");

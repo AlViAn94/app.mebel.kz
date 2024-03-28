@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create("positions_type", function (Blueprint $table) {
+        Schema::connection('test')->create("positions_type", function (Blueprint $table) {
             $table->bigIncrements("id");
             $table->string("name", 128);
             $table->timestamps();
