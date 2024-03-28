@@ -12,7 +12,7 @@ Route::post('admin/user/confirm', [PassConfirmController::class, 'addPassword'])
 // landing
 Route::prefix('landing')->group(function () {
     Route::resource('application', '\App\Http\Controllers\v1\Landing\ApplicationController')->only('create');
-    Route::resource('comment', '\App\Http\Controllers\v1\Landing\CommentClientController')->only('index', 'store', 'create', 'update');
+    Route::resource('comment/landing', '\App\Http\Controllers\v1\Landing\CommentClientController')->only('index', 'store', 'create', 'update');
     Route::get('check/order', [\App\Http\Controllers\v1\Landing\CheckOrderController::class, 'checkOrder']);
 });
 

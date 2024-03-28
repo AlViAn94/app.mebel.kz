@@ -14,7 +14,7 @@ class CreatedOrderService
             $district = $request['district'];
             $address = $request['address'];
             $sum = $request['sum']?null:0;
-            $type = $request['type']?null:'furniture';
+            $type = $request['type'];
             $date_end = $request['date_end'];
             $comment = $request['comment'];
 
