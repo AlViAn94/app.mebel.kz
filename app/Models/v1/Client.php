@@ -28,7 +28,7 @@ class Client extends Model
 
     public static function newClient($data)
     {
-        $existingRecord = static::where('iin', $data['iin'])->first();
+        $existingRecord = static::where('phone', $data['phone'])->first();
 
         if (!$existingRecord) {
             $newRecord = new static;
