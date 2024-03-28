@@ -13,8 +13,8 @@ class CreatedOrderService
             $client_id = $request['client_id'];
             $district = $request['district'];
             $address = $request['address'];
-            $sum = $request['sum']?null:'';
-            $type = $request['type']?null:'';
+            $sum = $request['sum']?null:0;
+            $type = $request['type']?null:'furniture';
             $date_end = $request['date_end'];
             $comment = $request['comment'];
 
