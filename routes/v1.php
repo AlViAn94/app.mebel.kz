@@ -49,6 +49,12 @@ Route::middleware('auth:api','tenant')->group(function (){
             Route::resource('comment', '\App\Http\Controllers\v1\Order\OrderCommentController')->only('index', 'create', 'destroy');
         });
 
+        // Sklad
+        Route::prefix('sklad')->group(function () {
+           Route::resource('/', '\App\Http\Controllers\v1\Sklad\SkladController')->only('index');
+           Route::post('/import', [\App\Http\Controllers\v1\Sklad\SkladController::class, 'importXls']);
+        });
+
         // RegMy
         Route::prefix('regmy')->group(function () {
             Route::post('registration', [\App\Http\Controllers\v1\Regmy\RegmyController::class, 'reg']);
