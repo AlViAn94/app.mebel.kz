@@ -55,6 +55,11 @@ Route::middleware('auth:api','tenant')->group(function (){
            Route::post('/import', [\App\Http\Controllers\v1\Sklad\SkladController::class, 'importXls']);
         });
 
+        // Store
+        Route::prefix('store')->group(function () {
+            Route::post('/ticket', [\App\Http\Controllers\v1\Store\StoreController::class, 'getTicket']);
+        });
+
         // RegMy
         Route::prefix('regmy')->group(function () {
             Route::post('registration', [\App\Http\Controllers\v1\Regmy\RegmyController::class, 'reg']);

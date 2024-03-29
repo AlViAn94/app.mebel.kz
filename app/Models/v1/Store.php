@@ -9,4 +9,11 @@ use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 class Store extends Model
 {
     use HasFactory, UsesTenantConnection;
+
+    protected $table = 'store';
+
+    protected $fillable = [
+        'position',
+        'sum'
+    ];
 }
