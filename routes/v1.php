@@ -50,14 +50,13 @@ Route::middleware('auth:api','tenant')->group(function (){
         });
 
         // Sklad
-        Route::prefix('sklad')->group(function () {
-           Route::resource('/', '\App\Http\Controllers\v1\Sklad\SkladController')->only('index');
-           Route::post('/import', [\App\Http\Controllers\v1\Sklad\SkladController::class, 'importXls']);
-        });
+           Route::resource('/sklad', '\App\Http\Controllers\v1\Sklad\SkladController')->only('index', 'update', 'store', 'destroy');
+           Route::post('/sklad/import', [\App\Http\Controllers\v1\Sklad\SkladController::class, 'importXls']);
 
         // Store
         Route::prefix('store')->group(function () {
             Route::post('/ticket', [\App\Http\Controllers\v1\Store\StoreController::class, 'getTicket']);
+            Route::get('/list', [\App\Http\Controllers\v1\Store\StoreController::class, 'historyList']);
         });
 
         // RegMy

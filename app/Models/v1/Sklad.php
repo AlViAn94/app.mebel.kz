@@ -2,8 +2,10 @@
 
 namespace App\Models\v1;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
@@ -21,7 +23,7 @@ class Sklad extends Model
         'code'
     ];
 
-    public static function list($data)
+    public static function list($data): LengthAwarePaginator|JsonResponse
     {
         $user = Auth::user();
         $user_id = $user['id'];
@@ -47,13 +49,11 @@ class Sklad extends Model
             $sort = 'created_at';
         }
 
-        $result = self::where(function ($query) use ($search) {
+        return self::query()->where(function ($query) use ($search) {
             $query->where('position', 'LIKE', "%{$search}%");
             $query->orWhere('code', 'LIKE', "%{$search}%");
         })
             ->orderBy($sort, $asc ? 'asc' : 'desc')
             ->paginate($count, ['*'], 'page', $page);
-
-        return $result;
     }
 }

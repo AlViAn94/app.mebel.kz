@@ -3,18 +3,20 @@
 namespace App\Imports;
 
 use App\Models\v1\Sklad;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Maatwebsite\Excel\Concerns\ToModel;
 
 class SkladImport implements ToModel
 {
     /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
-    public function model(array $row)
+     * @param array $row
+     *
+     * @return Sklad|JsonResponse
+     */
+    public function model(array $row): Sklad|JsonResponse
     {
-        $lastCode = Sklad::max('code');
+        $lastCode = Sklad::query()->max('code');
         $newCode = $lastCode + 1;
 
         if (is_numeric($row[1])) {
@@ -25,6 +27,8 @@ class SkladImport implements ToModel
                 'price' => $row[5],
                 'code' => $newCode
             ]);
+        }else{
+            return response()->json(['message' => 'error']);
         }
     }
 

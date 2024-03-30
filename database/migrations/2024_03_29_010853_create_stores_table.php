@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('stores', function (Blueprint $table) {
             $table->id();
-            $table->string('positions');
-            $table->integer('sum');
+            $table->json('positions');
+            $table->integer('total');
             $table->timestamps();
         });
     }
