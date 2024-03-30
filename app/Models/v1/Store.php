@@ -59,7 +59,8 @@ class Store extends Model
         $positions = [
             'dir',
             'manager',
-            'admin'
+            'admin',
+            'store'
         ];
 
         if (empty(array_intersect($positions, $roles))) {
