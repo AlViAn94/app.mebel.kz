@@ -92,7 +92,7 @@ return [
         ],
 
         'tenant' => [
-            'driver' => 'mysql',
+            'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '8889'),
@@ -101,7 +101,7 @@ return [
             'password' => env('DB_PASSWORD', 'root'),
             'unix_socket' => env('SCHOOL_DB_SOCKET', ''),
             'charset' => 'utf8',
-            'collation' => 'utf8mb4_unicode_ci',
+            'collation' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
             'strict' => true,
