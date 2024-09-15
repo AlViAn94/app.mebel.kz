@@ -2,8 +2,11 @@
 
 namespace App\Models\v1;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
@@ -27,9 +30,9 @@ class Application extends Model
     ];
 
     // Подача заявки
-    public static function addApplication($data)
+    public static function addApplication($data): Model|Builder|JsonResponse
     {
-        $existingApplication = self::where('phone', $data['phone'])
+        $existingApplication = self::query()->where('phone', $data['phone'])
             ->whereDate('created_at', now()->toDateString())
             ->first();
 
@@ -37,11 +40,11 @@ class Application extends Model
             return response()->json(['message' => 'Вы уже оставляли заявку сегодня.']);
         }
 
-        self::where('phone', $data['phone'])
+        self::query()->where('phone', $data['phone'])
             ->whereDate('created_at', '<', Carbon::yesterday())
             ->update(['is_active' => 0]);
 
-        return self::create([
+        return self::query()->create([
             'name' => $data['name'],
             'phone' => $data['phone'],
             'is_active' => 1
@@ -49,11 +52,11 @@ class Application extends Model
     }
 
     // Получение списка за период
-    public static function getApplicationsByPeriod($data)
+    public static function getApplicationsByPeriod($data): Collection|array
     {
         switch ($data['period']) {
             case self::TODAY:
-                $result = self::whereDate('created_at', now()->toDateString())
+                $result = self::query()->whereDate('created_at', now()->toDateString())
                     ->where('is_active', '>=', 1)->get();
 
                 if($result){
@@ -62,7 +65,7 @@ class Application extends Model
                     return [];
                 }
             case self::WEEK:
-                $result = self::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
+                $result = self::query()->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
                     ->where('is_active', '>=', 1)->get();
 
                 if($result){
@@ -71,7 +74,7 @@ class Application extends Model
                     return [];
                 }
             case self::MONTH:
-                $result = self::whereMonth('created_at', now()->month)
+                $result = self::query()->whereMonth('created_at', now()->month)
                     ->where('is_active', '>=', 1)->get();
 
                 if($result){

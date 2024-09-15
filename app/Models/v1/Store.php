@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
 class Store extends Model
@@ -82,5 +83,26 @@ class Store extends Model
         })
             ->orderBy($sort, $asc ? 'asc' : 'desc')
             ->paginate($count, ['*'], 'page', $page);
+    }
+
+    public static function testTransaction(): void
+    {
+        DB::beginTransaction();
+
+        try {
+            Store::query()->create([
+                'position' => 1,
+                'sum'      => 2
+            ]);
+
+            Store::query()->create([
+                'position' => 1,
+                'sum'      => 'asdwa'
+            ]);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+        }
     }
 }

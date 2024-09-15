@@ -3,9 +3,12 @@
 namespace App\Models\v1;
 
 use Carbon\Carbon;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use LaravelIdea\Helper\App\Models\v1\_IH_Client_C;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
 class Client extends Model
@@ -26,9 +29,9 @@ class Client extends Model
         'email'
     ];
 
-    public static function newClient($data)
+    public static function newClient($data): JsonResponse|static
     {
-        $existingRecord = static::where('phone', $data['phone'])->first();
+        $existingRecord = static::query()->where('phone', $data['phone'])->first();
 
         if (!$existingRecord) {
             $newRecord = new static;
@@ -42,9 +45,9 @@ class Client extends Model
         }
     }
 
-    public static function checkClient($data)
+    public static function checkClient($data): Client|JsonResponse
     {
-        $existingRecord = static::where('iin', $data['iin'])
+        $existingRecord = static::query()->where('iin', $data['iin'])
             ->orWhere('phone', $data['phone'])
             ->first();
         if($existingRecord)
@@ -54,9 +57,9 @@ class Client extends Model
             return response()->json(['message' => "Клиент не найден!"], 404);
         }
     }
-    public static function updateClient($data)
+    public static function updateClient($data): JsonResponse
     {
-        $order = self::find($data['id']);
+        $order = self::query()->find($data['id']);
 
         if ($order) {
             $order->update([
@@ -74,7 +77,7 @@ class Client extends Model
         }
     }
 
-    public static function getList($request)
+    public static function getList($request): LengthAwarePaginator|JsonResponse
     {
         $search = $request['search'];
         $sort = $request['sort'];
@@ -95,7 +98,7 @@ class Client extends Model
         if (!in_array('dir', $roles)) {
             return response()->json(['message' => 'У вас нет доступа.'], 404);
         }
-        $users = self::where(function ($query) use ($search) {
+        $users = self::query()->where(function ($query) use ($search) {
                 $query
                     ->where('name', 'LIKE', "%{$search}%");
             })
@@ -109,7 +112,7 @@ class Client extends Model
         return $users;
     }
 
-    public static function deleteClient($id)
+    public static function deleteClient($id): JsonResponse
     {
         $user = Auth::user();
         $roles = Role::getPositions($user['id']);
@@ -118,7 +121,7 @@ class Client extends Model
             return response()->json(['message' => 'У вас нет доступа.'], 404);
         }
 
-        $role = self::find($id);
+        $role = self::query()->find($id);
 
         if ($role) {
             $role->delete();
@@ -126,11 +129,11 @@ class Client extends Model
         }
         return response()->json(['message' => 'Не удалось удалить клиента.'], 404);
     }
-    public static function getDateEndAttribute($value)
+    public static function getDateEndAttribute($value): Carbon
     {
         return Carbon::parse($value);
     }
-    public static function getNewClients($data)
+    public static function getNewClients($data): array|int
     {
         $year = $data['year'];
         $month = $data['month'];
@@ -143,7 +146,7 @@ class Client extends Model
             $date_time = self::getDateEndAttribute($date);
             $day = $date_time->format('Y');
         }
-        $result = self::whereDate('created_at', 'like', $day . '%')
+        $result = self::query()->whereDate('created_at', 'like', $day . '%')
             ->count('id');
 
         if(!$result){

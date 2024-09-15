@@ -3,9 +3,11 @@
 namespace App\Models\v1;
 
 use Carbon\Carbon;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
@@ -35,9 +37,9 @@ class Order extends Model
         'date_end'
     ];
 
-    public static function findById($id)
+    public static function findById($id): mixed
     {
-        return self::where('id', $id)->first();
+        return self::query()->where('id', $id)->first();
     }
 
     public function design()
@@ -128,7 +130,7 @@ class Order extends Model
         }
     }
 
-    public static function list($data)
+    public static function list($data): LengthAwarePaginator|JsonResponse
     {
         $user = Auth::user();
         $user_id = $user['id'];

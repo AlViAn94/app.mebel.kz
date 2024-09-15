@@ -116,3 +116,5 @@ Route::get('/test', [\App\Console\Commands\Custom\CustomMigrationService::class,
 Route::get('/test-mass', [\App\Console\Commands\Custom\CustomMigrationService::class, 'actionMassMigration']);
 Route::get('/test-order', [OrderController::class, 'actionTest']);
 // test end
+
+Route::get('/test-trans', [\App\Http\Controllers\v1\Store\StoreController::class, 'testTransaction']);

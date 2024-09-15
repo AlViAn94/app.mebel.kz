@@ -5,6 +5,7 @@ namespace App\Models\v1;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
@@ -31,26 +32,26 @@ class Metring extends Model
         $datetime = Carbon::now();
         $date = $datetime->format('Y-m-d H:i');
 
-        self::where('id', $data['id'])->where('status', 0)->update([
+        self::query()->where('id', $data['id'])->where('status', 0)->update([
             'user_id' => $user_id,
             'user_name' => $name,
             'take_date' => $date,
             'status' => 1
         ]);
 
-        $order = self::where('id', $data['id'])->select('order_id')->first();
+        $order = self::query()->where('id', $data['id'])->select('order_id')->first();
 
         $order_id = $order['order_id'];
 
         return $order_id;
     }
 
-    public static function submittedOrder($data)
+    public static function submittedOrder($data): bool
     {
         $datetime = Carbon::now();
         $date = $datetime->format('Y-m-d');
 
-        $model = self::where('id', $data['id'])->where('status', 1)->update([
+        $model = self::query()->where('id', $data['id'])->where('status', 1)->update([
             'passed_date' => $date,
             'status' => 2
         ]);
@@ -58,9 +59,9 @@ class Metring extends Model
         return $model;
     }
 
-    public static function updateCard($id)
+    public static function updateCard($id): JsonResponse
     {
-        $result = self::where('id', $id)->update([
+        $result = self::query()->where('id', $id)->update([
             'user_id' => null,
             'user_name' => null,
             'take_date' => null,

@@ -18,9 +18,9 @@ class ClientComment extends Model
         'order_num'
     ];
 
-    public static function addFileLink($file_link, $text, $order_num)
+    public static function addFileLink($file_link, $text, $order_num): bool
     {
-        $result = self::create([
+        $result = self::query()->create([
             'file' => $file_link,
             'text' => $text,
             'order_num' => $order_num
@@ -33,9 +33,9 @@ class ClientComment extends Model
         }
     }
 
-    public static function checkComment($order_num)
+    public static function checkComment($order_num): bool
     {
-        if(self::where('order_num', $order_num)->first()){
+        if(self::query()->where('order_num', $order_num)->first()){
             return false;
         }else{
             return true;

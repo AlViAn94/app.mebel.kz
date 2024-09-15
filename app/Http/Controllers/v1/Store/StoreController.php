@@ -19,4 +19,9 @@ class StoreController extends Controller
     {
         return Store::list($request->json()->all());
     }
+
+    public function testTransaction()
+    {
+        return Store::testTransaction();
+    }
 }

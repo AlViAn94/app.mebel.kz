@@ -9,10 +9,10 @@ class District extends Model
 {
     use HasFactory;
 
-    public static function list($data)
+    public static function list($data): array
     {
 
-        $result = self::get()
+        $result = self::query()->get()
             ->toArray();
         if($result){
             return $result;

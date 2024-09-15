@@ -4,6 +4,7 @@ namespace App\Models\v1;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
@@ -13,7 +14,7 @@ class Comment extends Model
 
     protected $table = 'order_comments';
 
-    public static function addComment($data)
+    public static function addComment($data): JsonResponse|bool
     {
         $user = Auth::user();
         $user_id = $user['id'];
@@ -44,21 +45,21 @@ class Comment extends Model
         }
     }
 
-    public static function list($data)
+    public static function list($data): array|JsonResponse
     {
         $order_id = $data['order_id'];
 
-        if(!Order::find($order_id)){
+        if(!Order::query()->find($order_id)){
             return response()->json(['message' => 'Не верные данные.'], 404);
         }
-        return self::where('order_id', $order_id)->get()->toArray();
+        return self::query()->where('order_id', $order_id)->get()->toArray();
     }
 
-    public static function deletedComment($id)
+    public static function deletedComment($id): bool|JsonResponse
     {
         $user = Auth::user();
 
-        $comment = self::find($id);
+        $comment = self::query()->find($id);
 
         if($comment){
             if($user['id'] != $comment['user_id']){

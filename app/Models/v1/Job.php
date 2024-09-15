@@ -24,7 +24,7 @@ class Job extends Model
     ];
 
 
-    public static function takeOrderJob($data)
+    public static function takeOrderJob($data): bool
     {
         $user = Auth::user();
         $user_id = $user['id'];
@@ -33,7 +33,7 @@ class Job extends Model
         $datetime = Carbon::now();
         $date = $datetime->format('Y-m-d H:i');
 
-        $model = self::where('id', $data['id'])->where('status', 0)->update([
+        $model = self::query()->where('id', $data['id'])->where('status', 0)->update([
             'user_id' => $user_id,
             'user_name' => $name,
             'take_date' => $date,
@@ -43,12 +43,12 @@ class Job extends Model
         return $model;
     }
 
-    public static function submittedOrder($data)
+    public static function submittedOrder($data): bool
     {
         $datetime = Carbon::now();
         $date = $datetime->format('Y-m-d H:i');
 
-        $model = self::where('id', $data['id'])->where('user_id', $data['user_id'])->where('status', 1)->update([
+        $model = self::query()->where('id', $data['id'])->where('user_id', $data['user_id'])->where('status', 1)->update([
             'passed_date' => $date,
             'status' => 2
         ]);
